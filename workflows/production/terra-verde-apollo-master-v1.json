@@ -1,0 +1,352 @@
+{
+  "name": "🚀 Terra Verde - Apollo Import + Email Campaign (MASTER)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start-node",
+      "name": "🚀 START: Apollo Import + Email Campaign",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        112,
+        304
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process Apollo CSV file data from Read File node\nconst fileContent = $input.first().binary.data.toString('utf8');\n\n// Split into lines and process\nconst lines = fileContent.trim().split('\\n');\nconst headers = lines[0].split('\\t');\nconst dataRows = lines.slice(1);\n\n// Convert to objects\nconst contacts = dataRows.map(row => {\n  const fields = row.split('\\t');\n  const contact = {};\n  headers.forEach((header, index) => {\n    contact[header] = fields[index] || '';\n  });\n  return contact;\n});\n\n// Filter for facilities contacts\nconst facilitiesContacts = contacts.filter(contact => {\n  const email = contact['Email'];\n  const title = contact['Title'].toLowerCase();\n  const department = contact['Departments'].toLowerCase();\n  \n  return email && \n         email.includes('@') && \n         !email.includes('example.com') &&\n         (title.includes('facilities') || \n          title.includes('facility') || \n          title.includes('maintenance') ||\n          title.includes('operations') ||\n          department.includes('facilities') ||\n          department.includes('operations'));\n});\n\nconsole.log(`✅ Loaded ${contacts.length} contacts from file`);\nconsole.log(`🎯 Found ${facilitiesContacts.length} facilities contacts`);\n\nreturn { json: { records: facilitiesContacts } };"
+      },
+      "id": "apollo-csv-paste",
+      "name": "📊 Paste Apollo CSV Data Here",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        368,
+        208
+      ],
+      "typeVersion": 2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Convert Apollo CSV format to Terra Verde email campaign format\nconst input = $input.first();\n\nif (!input.json || !input.json.records) {\n  throw new Error('No Apollo records received');\n}\n\nconst apolloRecords = input.json.records;\nconsole.log(`Converting ${apolloRecords.length} Apollo records to Terra Verde format...`);\n\nconst terraVerdeProspects = apolloRecords.map(apollo => {\n  // Map Apollo fields to Terra Verde email campaign fields\n  const prospect = {\n    // Basic prospect info (matching Terra Verde email campaign structure)\n    'First Name': apollo['First Name'] || '',\n    'Last Name': apollo['Last Name'] || '',\n    'Company': apollo['Company'] || apollo['Company Name for Emails'] || '',\n    'Primary Email': apollo['Email'] || '',\n    'Title': apollo['Title'] || '',\n    'Industry': apollo['Industry'] || 'Business Services', // Default industry\n    'Phone': apollo['Work Direct Phone'] || apollo['Mobile Phone'] || apollo['Corporate Phone'] || '',\n    'City': apollo['City'] || '',\n    'State': apollo['State'] || '',\n    'Country': apollo['Country'] || '',\n    'LinkedIn': apollo['Person Linkedin Url'] || '',\n    'Website': apollo['Website'] || '',\n    \n    // Campaign tracking fields (all new prospects start as \"New\")\n    'Status': 'New',\n    'Intro_Sent_Date': '',\n    'Followup_Sent_Date': '',\n    'Final_Sent_Date': '',\n    'Response': '',\n    'Appointment_Booked': '',\n    'Next_Action': '',\n    'Last_Updated': ''\n  };\n  \n  console.log(`✅ Converted: ${prospect['First Name']} ${prospect['Last Name']} (${prospect['Company']})`);\n  return prospect;\n});\n\nconsole.log(`🎯 Converted ${terraVerdeProspects.length} Apollo prospects to Terra Verde format`);\n\n// Return in the format expected by the email campaign logic\nreturn terraVerdeProspects.map(prospect => ({ json: prospect }));"
+      },
+      "id": "apollo-to-terra",
+      "name": "🔄 Convert Apollo to Terra Verde Format",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        608,
+        304
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\ntoday.setHours(0, 0, 0, 0);\n\nconst results = [];\nlet introACount = 0;\nlet introBCount = 0;\n\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  console.log('📋 Processing prospect:', data['First Name'], data['Last Name']);\n  \n  const prospect = {\n    // Basic prospect info\n    First_Name: data['First Name'] || '',\n    Last_Name: data['Last Name'] || '',\n    Company_Name: data['Company'] || '',\n    Email: data['Primary Email'] || '',\n    Title: data['Title'] || '',\n    Industry: data['Industry'] || '',\n    Phone: data['Phone'] || '',\n    LinkedIn: data['LinkedIn'] || '',\n    Website: data['Website'] || '',\n    City: data['City'] || '',\n    State: data['State'] || '',\n    Country: data['Country'] || '',\n    \n    // Tracking fields\n    Contact_Name: `${data['First Name'] || ''} ${data['Last Name'] || ''}`.trim(),\n    Status: data['Status'] || 'New',\n    Intro_Sent_Date: data['Intro_Sent_Date'] || '',\n    Followup_Sent_Date: data['Followup_Sent_Date'] || '',\n    Final_Sent_Date: data['Final_Sent_Date'] || '',\n    Response: data['Response'] || '',\n    Appointment_Booked: data['Appointment_Booked'] || '',\n    Next_Action: data['Next_Action'] || '',\n    Last_Updated: data['Last_Updated'] || '',\n    \n    // Logic flags\n    today: today.toISOString().split('T')[0],\n    needsIntroEmail: false,\n    needsFollowupEmail: false,\n    needsFinalEmail: false,\n    emailType: '',\n    emailVersion: '',\n    emailStatus: 0\n  };\n  \n  // Skip if no email\n  if (!prospect.Email) {\n    console.log('⚠️ Skipping prospect without email:', prospect.Contact_Name);\n    continue;\n  }\n  \n  // EMAIL TIMING LOGIC\n  console.log(`🔍 Analyzing ${prospect.Contact_Name}:`);\n  console.log(`  Status: \"${prospect.Status}\"`);\n  console.log(`  Intro Date: \"${prospect.Intro_Sent_Date}\"`);\n  console.log(`  Followup Date: \"${prospect.Followup_Sent_Date}\"`);\n  \n  if (prospect.Followup_Sent_Date && prospect.Followup_Sent_Date !== '') {\n    // Has followup date - check for final email\n    const followupDate = new Date(prospect.Followup_Sent_Date);\n    const daysDiff = Math.floor((today - followupDate) / (1000 * 60 * 60 * 24));\n    console.log(`  Days since followup: ${daysDiff}`);\n    \n    if (daysDiff >= 3) {\n      prospect.needsFinalEmail = true;\n      prospect.emailType = 'final';\n      prospect.emailVersion = 'FINAL';\n      prospect.emailStatus = 4;\n      console.log(`  ✅ FINAL email assigned`);\n    }\n  }\n  else if (prospect.Intro_Sent_Date && prospect.Intro_Sent_Date !== '') {\n    // Has intro date but no followup - check for followup email\n    const introDate = new Date(prospect.Intro_Sent_Date);\n    const daysDiff = Math.floor((today - introDate) / (1000 * 60 * 60 * 24));\n    console.log(`  Days since intro: ${daysDiff}`);\n    \n    if (daysDiff >= 2) {\n      prospect.needsFollowupEmail = true;\n      prospect.emailType = 'followup';\n      prospect.emailVersion = 'FOLLOWUP';\n      prospect.emailStatus = 3;\n      console.log(`  ✅ FOLLOWUP email assigned`);\n    }\n  }\n  else {\n    // New prospect - needs intro email with A/B testing\n    prospect.needsIntroEmail = true;\n    prospect.emailType = 'intro';\n    \n    // A/B Testing Logic - Alternate between A and B\n    const version = (introACount + introBCount) % 2 === 0 ? 'A' : 'B';\n    \n    if (version === 'A') {\n      introACount++;\n      prospect.emailStatus = 1;\n      prospect.emailVersion = 'INTRO-A';\n      console.log(`  🔵 INTRO-A assigned to ${prospect.Contact_Name}`);\n    } else {\n      introBCount++;\n      prospect.emailStatus = 2;\n      prospect.emailVersion = 'INTRO-B';\n      console.log(`  🟣 INTRO-B assigned to ${prospect.Contact_Name}`);\n    }\n  }\n  \n  console.log(`  📧 Final assignment: ${prospect.emailVersion}`);\n  console.log('---');\n  \n  results.push(prospect);\n}\n\nconsole.log(`✅ Campaign logic complete!`);\nconsole.log(`📊 Email distribution:`);\nconsole.log(`  - Total prospects: ${results.length}`);\nconsole.log(`  - INTRO-A assignments: ${introACount}`);\nconsole.log(`  - INTRO-B assignments: ${introBCount}`);\nconsole.log(`  - FOLLOWUP assignments: ${results.filter(r => r.emailVersion === 'FOLLOWUP').length}`);\nconsole.log(`  - FINAL assignments: ${results.filter(r => r.emailVersion === 'FINAL').length}`);\n\nreturn results.map(prospect => ({ json: prospect }));"
+      },
+      "id": "email-campaign-logic",
+      "name": "📧 Email Campaign Logic & A/B Testing",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        864,
+        304
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "sendTo": "=jcadvisor2017@gmail.com\n",
+        "subject": "= TEST: {{ $json.emailVersion }} Email for {{ $json.Company_Name }} ({{ $json.Contact_Name }})",
+        "message": "=<h3>🧪 EMAIL VALIDATION TEST</h3>\n<p><strong>This email would be sent to:</strong> {{ $json.Email }}<br>\n<strong>Prospect:</strong> {{ $json.Contact_Name }}<br>\n<strong>Company:</strong> {{ $json.Company_Name }}<br>\n<strong>Email Version:</strong> {{ $json.emailVersion }}</p>\n\n<hr>\n<h3>📧 Actual Email Content That Would Be Sent:</h3>\n<div style=\"border-left: 3px solid #28a745; padding-left: 15px; margin: 20px 0; background-color: #f8f9fa; padding: 15px;\">\n\n<p><strong>To:</strong> {{ $json.Email }}<br>\n<strong>Subject:</strong> {{ $json.emailVersion === 'INTRO-A' ? `Quick connection - Terra Verde Cleaning` : $json.emailVersion === 'INTRO-B' ? `Terra Verde Cleaning Services - Professional Proposal` : $json.emailVersion === 'FOLLOWUP' ? `Following up - Terra Verde Cleaning Discussion` : `Final note - Terra Verde Cleaning Services` }}</p>\n\n{{ $json.emailVersion === 'INTRO-A' ? `Hi ${$json.Contact_Name.split(' ')[0]},<br><br>Hope it's been a good 2025 so far. Can't believe the summer is over already!<br><br>My name is Chloe and I handle business development for Terra Verde Cleaning. We are a commercial cleaning company that services Southern Florida.<br><br>I am looking to connect with people such as yourself within the industry to see if there are services you need and/or services we can have the opportunity to quote you on in the future. We focus heavily on creating a greener and cleaner space through all of our janitorial services and provide other services such as floor care, painting, window cleaning, and maintenance management consulting.<br><br>If there is a good time to connect this week or early next week, let me know.<br><br>Kind regards,<br>Chloe<br><br>Website: terraverdecleaning.com<br>Email: chloe@terraverdecleaning.com` : $json.emailVersion === 'INTRO-B' ? `Good Afternoon ${$json.Contact_Name.split(' ')[0]},<br><br>Thank you for allowing me the opportunity to introduce myself and Terra Verde Cleaning Services.<br><br>For over 30 years experience, we've proudly been servicing South Florida by providing professional janitorial services across multiple industries. This experience has given us a deep understanding of what facilities need to operate smoothly, safely, and cost-effectively. Our mission is simple yet powerful: <strong>\"Leave each place better than we found it.\"</strong><br><br>At Terra Verde, we don't offer cookie-cutter programs—we create <strong>customized cleaning solutions</strong> designed to improve the environments where people live, work, and thrive. Our success comes from focusing on what matters most to our clients:<br><br>• <strong>Operational excellence:</strong> Clear, customer-focused service plans<br>• <strong>Technology</strong> – We use technology to manage inspections, inventory, and labor timekeeping.<br>• <strong>Transparency:</strong> Open communication and cost-saving strategies<br>• <strong>Strong oversight:</strong> Effective management and supervision at every level<br>• <strong>Sustainability:</strong> Safe and healthy practices for your staff, visitors, and our team<br><br>We would love the chance to discuss how these solutions could benefit your facility. I've attached our brochure and included our website link below for your review:<br>www.terraverdecleaning.com<br><br>I'd be glad to set up a quick call to explore how we can add value to your organization. Please feel free to reach out at your convenience—I look forward to connecting.<br><br>Best regards,<br>Chloe Anderson<br>Terra Verde Cleaning Services<br><br>Website: terraverdecleaning.com<br>Email: chloe@terraverdecleaning.com` : $json.emailVersion === 'FOLLOWUP' ? `Good Afternoon ${$json.Contact_Name.split(' ')[0]},<br><br>I hope this message finds you well. I wanted to follow up on my earlier email to see if you had a chance to review the information I shared about Terra Verde Cleaning Services.<br><br>With over 30 years of experience, we've built our reputation on providing tailored cleaning programs that enhance safety, efficiency, and cost-effectiveness for facilities across South Florida. Many of our current clients first connected with us through a simple conversation about their unique challenges, which allowed us to design a program that truly fit their needs.<br><br>I'd welcome the opportunity to do the same for you. Would you be open to a brief call next week to discuss how Terra Verde can support your facility goals? Even a 15-minute conversation could help identify opportunities for improvement and potential cost savings.<br><br>Please let me know what time works best for you, and I'd be happy to accommodate your schedule.<br><br>Looking forward to hearing from you.<br><br>Best regards,<br>Chloe Anderson<br>Terra Verde Cleaning Services<br><br>Website: terraverdecleaning.com<br>Email: chloe@terraverdecleaning.com` : `Good Afternoon ${$json.Contact_Name.split(' ')[0]},<br><br>I hope you're having a great week. This will be my final follow-up regarding Terra Verde Cleaning Services, as I don't want to overwhelm your inbox.<br><br>I understand that timing isn't always right for exploring new service partnerships, and I completely respect that. However, I wanted to leave you with a final thought: many of our most successful client relationships began when facility managers were simply exploring their options, even without an immediate need.<br><br>If your cleaning service needs change in the future—whether that's due to growth, budget considerations, or service quality concerns—we'd be honored to earn the opportunity to discuss how Terra Verde's 30+ years of experience could benefit your facility.<br><br>Thank you for your time and consideration. I wish you and your organization continued success.<br><br>Best regards,<br>Chloe Anderson<br>Terra Verde Cleaning Services<br><br>Website: terraverdecleaning.com<br>Email: chloe@terraverdecleaning.com` }}\n\n</div>\n\n<hr>\n<p><em>🧪 This is a TEST email for validation - Generated at: {{ $now.format('yyyy-MM-dd HH:mm:ss') }}</em></p>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Terra Verde Testing System"
+        }
+      },
+      "id": "send-real-emails",
+      "name": "📬 Send REAL Emails to Prospects",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        1152,
+        208
+      ],
+      "typeVersion": 2,
+      "webhookId": "82595ad3-3072-4d86-9b18-b23226689d8c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gBX6lMvPLMfJmBHH",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1PYL4rSXKaXrZC0f4j2Y1KES8QbWcKsD8WdlPek8fTlU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Terra Master Tracking"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contact Name": "={{ $json.Contact_Name }}",
+            "Company Name": "={{ $json.Company_Name }}",
+            "Email": "={{ $json.Email }}",
+            "Phone": "={{ $json.Phone }}",
+            "Title": "={{ $json.Title }}",
+            "Industry": "={{ $json.Industry }}",
+            "City": "={{ $json.City }}",
+            "State": "={{ $json.State }}",
+            "Country": "={{ $json.Country }}",
+            "Email_Version": "={{ $json.emailVersion }}",
+            "Status": "={{ $json.emailStatus }}",
+            "L1: Intro_Sent_Date": "={{ $json.needsIntroEmail ? $json.today : $json.Intro_Sent_Date }}",
+            "M1: Followup_Sent_Date": "={{ $json.needsFollowupEmail ? $json.today : $json.Followup_Sent_Date }}",
+            "N1: Final_Sent_Date": "={{ $json.needsFinalEmail ? $json.today : $json.Final_Sent_Date }}",
+            "O1: Response": "={{ $json.Response }}",
+            "P1: Appointment_Booked": "={{ $json.Appointment_Booked }}",
+            "Q1: Date_Processed": "={{ $json.today }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-to-tracking",
+      "name": "📊 Log to Master Tracking Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1152,
+        400
+      ],
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7xvUIsi3dWAco7xQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "jcadvisor2017@gmail.com",
+        "toEmail": "jcadvisor2017@gmail.com",
+        "subject": "🚀{{$json[\"emailSubject\"]}}",
+        "text": "={{$json[\"emailBody\"]}}",
+        "options": {}
+      },
+      "id": "campaign-report",
+      "name": "📧 Send Campaign Report",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [
+        1456,
+        304
+      ],
+      "typeVersion": 2,
+      "webhookId": "cb6bbd1c-ca53-4c69-85d6-da7d7b93b107",
+      "executeOnce": true,
+      "credentials": {
+        "smtp": {
+          "id": "F6wHgBzoID4BDy1e",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process Apollo CSV data - correct format\nconst input = $input.first();\n\n// Get the CSV data from the correct location\nconst csvText = input.json.data;\n\nif (!csvText) {\n  throw new Error('No CSV data found');\n}\n\n// Split into lines and process\nconst lines = csvText.trim().split('\\n');\nconst headers = lines[0].split(',');\nconst dataRows = lines.slice(1);\n\n// Convert to objects\nconst contacts = dataRows.map(row => {\n  // Handle CSV with quoted fields properly\n  const fields = row.match(/(\".*?\"|[^\",]+)(?=\\s*,|\\s*$)/g) || [];\n  const contact = {};\n  headers.forEach((header, index) => {\n    const value = fields[index] || '';\n    // Remove quotes and clean up\n    contact[header.trim()] = value.replace(/^\"(.*)\"$/, '$1').trim();\n  });\n  return contact;\n});\n\n// No filtering - use all contacts from the Apollo file\nconst facilitiesContacts = contacts.filter(contact => {\n  const email = contact['Email'] || '';\n  // Only check for valid email\n  return email && email.includes('@') && !email.includes('example.com');\n});\n\nconsole.log(`Total contacts: ${contacts.length}`);\nconsole.log(`Facilities contacts: ${facilitiesContacts.length}`);\n\n// Return debug info in the output so we can see it\nreturn { \n  json: { \n    records: facilitiesContacts,\n    DEBUG: {\n      totalContacts: contacts.length,\n      facilitiesContacts: facilitiesContacts.length,\n      allJobTitles: contacts.map(c => c['Title']).filter(t => t),\n      filteredTitles: facilitiesContacts.map(c => c['Title'])\n    }\n  } \n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        448
+      ],
+      "id": "da6e779f-6dc1-4de4-b4e9-a26c3d544e57",
+      "name": "Process Apollo CVS"
+    },
+    {
+      "parameters": {
+        "url": "https://docs.google.com/spreadsheets/d/1uRXl9cO7LeVm7igGfLjdAcfEQ1oxV8ktWFDM6SOog3c/export?format=csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        304,
+        464
+      ],
+      "id": "a3a00907-31a7-4108-bbce-2adc7d38e5d8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simple campaign report - just get it working\nconst allContacts = $input.all();\nconst totalProspects = allContacts.length;\n\nconst reportContent = `TERRA VERDE EMAIL CAMPAIGN COMPLETED\n\n✅ CAMPAIGN STATISTICS:\n- Total Prospects Processed: ${totalProspects}\n- Campaign Date: ${new Date().toLocaleDateString()}\n\nAll ${totalProspects} prospects have been contacted and logged to your tracking sheet.`;\n\nreturn {\n  json: {\n    emailSubject: `Terra Verde Campaign Report - ${totalProspects} Prospects Contacted`,\n    emailBody: reportContent,\n    to: \"jcadvisor2017@gmail.com\"\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        640
+      ],
+      "id": "d61c01bf-c68b-402c-b389-5ec1375db7ef",
+      "name": "Generate Campain Node"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1120,
+        640
+      ],
+      "id": "7d28a074-1f86-4b06-b4dc-7887b153627b",
+      "name": "Log to Master Tracking Sheet\" and \"Generate Campaign Node",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "🚀 START: Apollo Import + Email Campaign": {
+      "main": [
+        [
+          {
+            "node": "📊 Paste Apollo CSV Data Here",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Paste Apollo CSV Data Here": {
+      "main": [
+        []
+      ]
+    },
+    "🔄 Convert Apollo to Terra Verde Format": {
+      "main": [
+        [
+          {
+            "node": "📧 Email Campaign Logic & A/B Testing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📧 Email Campaign Logic & A/B Testing": {
+      "main": [
+        [
+          {
+            "node": "📬 Send REAL Emails to Prospects",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Log to Master Tracking Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📬 Send REAL Emails to Prospects": {
+      "main": [
+        [
+          {
+            "node": "📊 Log to Master Tracking Sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log to Master Tracking Sheet\" and \"Generate Campaign Node",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Campain Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Log to Master Tracking Sheet": {
+      "main": [
+        [
+          {
+            "node": "Log to Master Tracking Sheet\" and \"Generate Campaign Node",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Process Apollo CVS": {
+      "main": [
+        [
+          {
+            "node": "🔄 Convert Apollo to Terra Verde Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Process Apollo CVS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📧 Send Campaign Report": {
+      "main": [
+        []
+      ]
+    },
+    "Generate Campain Node": {
+      "main": [
+        [
+          {
+            "node": "📧 Send Campaign Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Master Tracking Sheet\" and \"Generate Campaign Node": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "versionId": "991a5d0a-0d6c-4afe-bbdb-001bc5e07c6f",
+  "meta": {
+    "instanceId": "df2629f1fb6d52e0fcc3604e63891d8d0c64193739a7cd79e35a7385e73e2b94"
+  },
+  "id": "ILKrIrcSuSOMErDl",
+  "tags": []
+}
