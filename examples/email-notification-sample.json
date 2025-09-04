@@ -1,0 +1,92 @@
+{
+  "name": "Email Notification Sample",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook",
+        "responseMode": "onReceived"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Process incoming webhook data\nconst data = items[0].json;\n\n// Extract relevant information\nconst subject = data.subject || 'Notification';\nconst message = data.message || 'Default message';\nconst recipient = data.email || 'admin@example.com';\n\n// Return processed data\nreturn [{\n  json: {\n    subject: subject,\n    message: message,\n    recipient: recipient,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "data-processor",
+      "name": "Process Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "nodeCredentialType": "smtpApi",
+        "requestMethod": "POST",
+        "url": "={{ $json.recipient }}",
+        "sendQuery": false,
+        "sendHeaders": false,
+        "sendBody": true,
+        "bodyContentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "to",
+              "value": "={{ $json.recipient }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message }}\\n\\nSent at: {{ $json.timestamp }}"
+            }
+          ]
+        }
+      },
+      "id": "email-sender",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Data": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": ["#automation", "#email", "#notification"],
+  "meta": {
+    "description": "Simple email notification workflow triggered by webhook",
+    "version": "1.0.0",
+    "author": "User",
+    "created": "2024-09-04"
+  }
+}
