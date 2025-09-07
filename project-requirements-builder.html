@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 SUPER POWER AI Agent Project Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .section-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .section-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-4">
+                🚀 SUPER POWER AI Agent Builder
+            </h1>
+            <p class="text-xl text-white/80 mb-6">
+                Enhanced specification generator for perfect AI agent development
+            </p>
+            <div class="glassmorphism p-4 inline-block">
+                <span class="text-white font-semibold">⚡ Super Power SOP Integration | Claude AI Agent Team</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="glassmorphism p-4 mb-8">
+            <div class="flex justify-between items-center text-white text-sm mb-2">
+                <span>Progress</span>
+                <span id="progress-text">0% Complete</span>
+            </div>
+            <div class="w-full bg-white/20 rounded-full h-2">
+                <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <form id="requirements-form" class="space-y-8">
+            <!-- Section 1: Project Overview -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-info-circle mr-3 text-blue-300"></i>
+                    Project Overview
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-white font-medium mb-2">Agent Name *</label>
+                        <input type="text" name="agentName" required 
+                               class="form-input w-full px-4 py-3 rounded-lg"
+                               placeholder="e.g., Lead Generation Agent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Company Name *</label>
+                        <input type="text" name="companyName" required 
+                               class="form-input w-full px-4 py-3 rounded-lg"
+                               placeholder="e.g., Terraverde Cleaning Service">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Industry</label>
+                        <select name="industry" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select Industry</option>
+                            <option value="cleaning">Cleaning Services</option>
+                            <option value="real-estate">Real Estate</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="finance">Finance</option>
+                            <option value="retail">Retail</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="technology">Technology</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Project Priority</label>
+                        <select name="priority" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="urgent">🚨 URGENT (Same Day)</option>
+                            <option value="high">🔥 High Priority (1-2 days)</option>
+                            <option value="medium" selected>⚡ Medium Priority (3-5 days)</option>
+                            <option value="normal">📅 Normal Priority (1 week)</option>
+                            <option value="low">🗓️ Low Priority (2-3 weeks)</option>
+                            <option value="backlog">📋 Backlog (1+ months)</option>
+                            <option value="research">🔬 Research Phase (Timeline TBD)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-white font-medium mb-2">Business Purpose *</label>
+                    <textarea name="businessPurpose" required rows="3"
+                              class="form-input w-full px-4 py-3 rounded-lg"
+                              placeholder="Describe what this agent will do and how it will help your business..."></textarea>
+                </div>
+            </div>
+
+            <!-- Section 2: SOP Integration -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-cog mr-3 text-purple-300"></i>
+                    Super Power SOP Integration
+                </h2>
+                
+                <div class="mb-6">
+                    <label class="block text-white font-medium mb-4">Project Type *</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="projectType" value="new-agent" class="sr-only" checked>
+                            <div class="project-type-card p-4 rounded-lg border-2 border-green-400 text-center hover:border-green-300 transition-colors">
+                                <i class="fas fa-plus-circle text-2xl text-green-300 mb-2"></i>
+                                <div class="text-white font-medium">New Agent</div>
+                                <div class="text-xs text-gray-300 mt-1">Build from scratch</div>
+                            </div>
+                        </label>
+                        
+                        <label class="cursor-pointer">
+                            <input type="radio" name="projectType" value="modify-existing" class="sr-only">
+                            <div class="project-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-blue-400 transition-colors">
+                                <i class="fas fa-edit text-2xl text-blue-300 mb-2"></i>
+                                <div class="text-white font-medium">Modify Existing</div>
+                                <div class="text-xs text-gray-300 mt-1">Enhance current agent</div>
+                            </div>
+                        </label>
+                        
+                        <label class="cursor-pointer">
+                            <input type="radio" name="projectType" value="n8n-workflow" class="sr-only">
+                            <div class="project-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-orange-400 transition-colors">
+                                <i class="fas fa-workflow text-2xl text-orange-300 mb-2"></i>
+                                <div class="text-white font-medium">n8n Workflow</div>
+                                <div class="text-xs text-gray-300 mt-1">Automation workflow</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Existing Agent Selection -->
+                <div id="existing-agent-section" class="hidden mb-6">
+                    <label class="block text-white font-medium mb-2">Select Existing Agent</label>
+                    <select name="existingAgent" class="form-input w-full px-4 py-3 rounded-lg">
+                        <option value="">Choose existing agent...</option>
+                        <option value="Agent001PayRec">Agent001PayRec - Payroll Reconciliation</option>
+                        <option value="Agent002">Agent002 - (Future agents will appear here)</option>
+                    </select>
+                </div>
+                
+                <!-- Auto-generated naming -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-white font-medium mb-2">Auto-Generated Agent Name</label>
+                        <input type="text" name="autoAgentName" readonly 
+                               class="form-input w-full px-4 py-3 rounded-lg bg-gray-700/50"
+                               placeholder="Will auto-generate based on purpose...">
+                        <div class="text-xs text-gray-400 mt-1">Format: Agent###[Purpose]</div>
+                    </div>
+                    <div>
+                        <label class="block text-white font-medium mb-2">Handoff Document Name</label>
+                        <input type="text" name="handoffDocName" readonly 
+                               class="form-input w-full px-4 py-3 rounded-lg bg-gray-700/50"
+                               placeholder="Will match agent name...">
+                        <div class="text-xs text-gray-400 mt-1">Format: [AgentName]_HANDOFF.md</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Enhanced Business Context -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-bullseye mr-3 text-red-300"></i>
+                    Enhanced Business Context
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-white font-medium mb-2">Current Problem/Pain Point *</label>
+                        <textarea name="currentProblem" required rows="3"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="What specific problem does this agent solve? What's currently broken or inefficient?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Manual Process Being Automated</label>
+                        <textarea name="manualProcess" rows="3"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="Describe the current manual steps that will be automated..."></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white font-medium mb-2">Expected ROI/Time Savings</label>
+                            <input type="text" name="expectedROI" 
+                                   class="form-input w-full px-4 py-3 rounded-lg"
+                                   placeholder="e.g., Save 10 hours/week, $5000/month">
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Key Stakeholders/Users</label>
+                            <input type="text" name="stakeholders" 
+                                   class="form-input w-full px-4 py-3 rounded-lg"
+                                   placeholder="Who will use this agent?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Agent Type -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-robot mr-3 text-green-300"></i>
+                    Agent Type
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="agentType" value="financial" class="sr-only">
+                        <div class="agent-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-blue-400 transition-colors">
+                            <i class="fas fa-calculator text-2xl text-blue-300 mb-2"></i>
+                            <div class="text-white font-medium">Financial</div>
+                        </div>
+                    </label>
+                    
+                    <label class="cursor-pointer">
+                        <input type="radio" name="agentType" value="lead-generation" class="sr-only">
+                        <div class="agent-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-green-400 transition-colors">
+                            <i class="fas fa-users text-2xl text-green-300 mb-2"></i>
+                            <div class="text-white font-medium">Lead Gen</div>
+                        </div>
+                    </label>
+                    
+                    <label class="cursor-pointer">
+                        <input type="radio" name="agentType" value="operations" class="sr-only">
+                        <div class="agent-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-purple-400 transition-colors">
+                            <i class="fas fa-cogs text-2xl text-purple-300 mb-2"></i>
+                            <div class="text-white font-medium">Operations</div>
+                        </div>
+                    </label>
+                    
+                    <label class="cursor-pointer">
+                        <input type="radio" name="agentType" value="custom" class="sr-only">
+                        <div class="agent-type-card p-4 rounded-lg border-2 border-white/30 text-center hover:border-yellow-400 transition-colors">
+                            <i class="fas fa-star text-2xl text-yellow-300 mb-2"></i>
+                            <div class="text-white font-medium">Custom</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div id="custom-agent-type" class="mt-4 hidden">
+                    <input type="text" name="customAgentType" 
+                           class="form-input w-full px-4 py-3 rounded-lg"
+                           placeholder="Describe your custom agent type...">
+                </div>
+            </div>
+
+            <!-- Section 3: Core Features -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-list-check mr-3 text-yellow-300"></i>
+                    Core Features
+                </h2>
+                
+                <div id="features-container">
+                    <div class="feature-item mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" name="featureName[]" 
+                                   class="form-input px-4 py-3 rounded-lg"
+                                   placeholder="Feature name">
+                            <input type="text" name="featureAction[]" 
+                                   class="form-input px-4 py-3 rounded-lg"
+                                   placeholder="User action">
+                            <input type="text" name="featureResult[]" 
+                                   class="form-input px-4 py-3 rounded-lg"
+                                   placeholder="Expected result">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="addFeature()" 
+                        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add Another Feature
+                </button>
+            </div>
+
+            <!-- Section 4: Data & Files -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-database mr-3 text-cyan-300"></i>
+                    Data & File Requirements
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="inputTypes[]" value="csv" class="mr-2">
+                        <i class="fas fa-file-csv mr-2 text-green-400"></i>CSV Files
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="inputTypes[]" value="excel" class="mr-2">
+                        <i class="fas fa-file-excel mr-2 text-green-600"></i>Excel Files
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="inputTypes[]" value="pdf" class="mr-2">
+                        <i class="fas fa-file-pdf mr-2 text-red-400"></i>PDF Files
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="inputTypes[]" value="manual" class="mr-2">
+                        <i class="fas fa-keyboard mr-2 text-blue-400"></i>Manual Entry
+                    </label>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="outputTypes[]" value="reports" class="mr-2">
+                        <i class="fas fa-chart-line mr-2 text-purple-400"></i>Reports
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="outputTypes[]" value="charts" class="mr-2">
+                        <i class="fas fa-chart-bar mr-2 text-orange-400"></i>Charts
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="outputTypes[]" value="export" class="mr-2">
+                        <i class="fas fa-download mr-2 text-cyan-400"></i>Data Export
+                    </label>
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="outputTypes[]" value="email" class="mr-2">
+                        <i class="fas fa-envelope mr-2 text-pink-400"></i>Notifications
+                    </label>
+                </div>
+            </div>
+
+            <!-- Section 5: Technical Integration Requirements -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-plug mr-3 text-indigo-300"></i>
+                    Technical Integration Requirements
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- n8n Integration -->
+                    <div>
+                        <label class="flex items-center text-white mb-4">
+                            <input type="checkbox" name="needsN8n" id="needsN8n" class="mr-3">
+                            <span class="text-lg">Connect to n8n workflows</span>
+                        </label>
+                        
+                        <div id="n8n-details" class="hidden ml-6 space-y-3">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label class="flex items-center text-white">
+                                    <input type="checkbox" name="n8nFeatures[]" value="trigger-workflows" class="mr-2">
+                                    <span class="text-sm">Trigger Workflows</span>
+                                </label>
+                                <label class="flex items-center text-white">
+                                    <input type="checkbox" name="n8nFeatures[]" value="receive-data" class="mr-2">
+                                    <span class="text-sm">Receive Data</span>
+                                </label>
+                                <label class="flex items-center text-white">
+                                    <input type="checkbox" name="n8nFeatures[]" value="send-data" class="mr-2">
+                                    <span class="text-sm">Send Data</span>
+                                </label>
+                                <label class="flex items-center text-white">
+                                    <input type="checkbox" name="n8nFeatures[]" value="status-monitoring" class="mr-2">
+                                    <span class="text-sm">Status Monitor</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- API Integrations -->
+                    <div>
+                        <label class="block text-white font-medium mb-3">Required API Integrations</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="google-sheets" class="mr-2">
+                                <span class="text-sm">Google Sheets</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="gmail" class="mr-2">
+                                <span class="text-sm">Gmail</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="slack" class="mr-2">
+                                <span class="text-sm">Slack</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="quickbooks" class="mr-2">
+                                <span class="text-sm">QuickBooks</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="paylocity" class="mr-2">
+                                <span class="text-sm">Paylocity</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="airtable" class="mr-2">
+                                <span class="text-sm">Airtable</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="zapier" class="mr-2">
+                                <span class="text-sm">Zapier</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="apiIntegrations[]" value="custom-api" class="mr-2">
+                                <span class="text-sm">Custom API</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Processing Type -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white font-medium mb-2">Processing Type</label>
+                            <select name="processingType" class="form-input w-full px-4 py-3 rounded-lg">
+                                <option value="real-time">Real-time Processing</option>
+                                <option value="batch">Batch Processing</option>
+                                <option value="scheduled">Scheduled Processing</option>
+                                <option value="manual-trigger">Manual Trigger Only</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Database Requirements</label>
+                            <select name="databaseNeeds" class="form-input w-full px-4 py-3 rounded-lg">
+                                <option value="none">No Database Needed</option>
+                                <option value="local-storage">Browser Local Storage</option>
+                                <option value="csv-files">CSV File Storage</option>
+                                <option value="google-sheets">Google Sheets as DB</option>
+                                <option value="external-db">External Database</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Dropbox Integration -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fab fa-dropbox mr-3 text-blue-400"></i>
+                    Dropbox Integration
+                </h2>
+                
+                <div class="mb-4">
+                    <label class="flex items-center text-white">
+                        <input type="checkbox" name="needsDropbox" id="needsDropbox" class="mr-3">
+                        <span class="text-lg">This agent needs Dropbox integration</span>
+                    </label>
+                </div>
+                
+                <div id="dropbox-details" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-white font-medium mb-2">Folder Structure</label>
+                        <input type="text" name="dropboxFolder" 
+                               class="form-input w-full px-4 py-3 rounded-lg"
+                               placeholder="e.g., AGENT_NAME/UPLOADS, REPORTS, EXPORTS">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <label class="flex items-center text-white">
+                            <input type="checkbox" name="dropboxPerms[]" value="read" class="mr-2">
+                            Read Files
+                        </label>
+                        <label class="flex items-center text-white">
+                            <input type="checkbox" name="dropboxPerms[]" value="write" class="mr-2">
+                            Write Files
+                        </label>
+                        <label class="flex items-center text-white">
+                            <input type="checkbox" name="dropboxPerms[]" value="folders" class="mr-2">
+                            Create Folders
+                        </label>
+                        <label class="flex items-center text-white">
+                            <input type="checkbox" name="dropboxPerms[]" value="share" class="mr-2">
+                            Share Files
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: UI Design -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-palette mr-3 text-pink-300"></i>
+                    UI Design Preferences
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-white font-medium mb-2">UI Style</label>
+                        <select name="uiStyle" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="glassmorphism">Modern Glassmorphism (like this form)</option>
+                            <option value="corporate">Corporate Professional</option>
+                            <option value="minimalist">Minimalist Clean</option>
+                            <option value="dark">Dark Theme</option>
+                            <option value="colorful">Colorful/Vibrant</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Layout Type</label>
+                        <select name="layoutType" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="single-page">Single Page Application</option>
+                            <option value="multi-tab">Multi-tab Interface</option>
+                            <option value="sidebar">Sidebar Navigation</option>
+                            <option value="dashboard">Dashboard Grid Layout</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Primary Color</label>
+                        <input type="color" name="primaryColor" value="#667eea"
+                               class="w-full h-12 rounded-lg border-2 border-white/30">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Secondary Color</label>
+                        <input type="color" name="secondaryColor" value="#764ba2"
+                               class="w-full h-12 rounded-lg border-2 border-white/30">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 7: Success Metrics & Testing -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-chart-line mr-3 text-emerald-300"></i>
+                    Success Metrics & Testing
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-white font-medium mb-2">How Will You Test This Agent? *</label>
+                        <textarea name="testingMethod" required rows="3"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="Describe your testing approach... Do you have sample data? What scenarios will you test?"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="flex items-center text-white mb-3">
+                                <input type="checkbox" name="hasSampleData" class="mr-3">
+                                <span class="text-lg">I have sample data ready for testing</span>
+                            </label>
+                            
+                            <label class="block text-white font-medium mb-2">Sample Data Description</label>
+                            <textarea name="sampleDataDesc" rows="2"
+                                      class="form-input w-full px-4 py-3 rounded-lg"
+                                      placeholder="Describe your sample data..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-white font-medium mb-2">Performance Benchmarks</label>
+                            <input type="text" name="performanceBenchmarks" 
+                                   class="form-input w-full px-4 py-3 rounded-lg mb-3"
+                                   placeholder="e.g., Process 100 records in <30 seconds">
+                            
+                            <label class="block text-white font-medium mb-2">Accuracy Requirements</label>
+                            <input type="text" name="accuracyRequirements" 
+                                   class="form-input w-full px-4 py-3 rounded-lg"
+                                   placeholder="e.g., 99% accuracy, zero calculation errors">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Error Handling Requirements</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="errorHandling[]" value="user-friendly-messages" class="mr-2">
+                                <span class="text-sm">User-friendly Messages</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="errorHandling[]" value="retry-mechanism" class="mr-2">
+                                <span class="text-sm">Retry Mechanism</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="errorHandling[]" value="error-logging" class="mr-2">
+                                <span class="text-sm">Error Logging</span>
+                            </label>
+                            <label class="flex items-center text-white">
+                                <input type="checkbox" name="errorHandling[]" value="graceful-fallback" class="mr-2">
+                                <span class="text-sm">Graceful Fallback</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Success Definition</label>
+                        <textarea name="successDefinition" rows="2"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="What does 'success' look like for this agent? When will you consider it complete and working?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 8: Additional Requirements -->
+            <div class="section-card rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-plus-circle mr-3 text-orange-300"></i>
+                    Additional Requirements
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-white font-medium mb-2">Special Features or Integrations</label>
+                        <textarea name="specialRequirements" rows="3"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="Any special requirements, integrations, or unique features..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Success Criteria</label>
+                        <textarea name="successCriteria" rows="2"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="How will you know this agent is successful?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Additional Notes</label>
+                        <textarea name="additionalNotes" rows="3"
+                                  class="form-input w-full px-4 py-3 rounded-lg"
+                                  placeholder="Any other details, inspiration, or specific requests..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" 
+                        class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-rocket mr-3"></i>
+                    Generate My Agent Requirements!
+                </button>
+            </div>
+        </form>
+
+        <!-- Output Modal -->
+        <div id="output-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+            <div class="glassmorphism p-8 max-w-4xl max-h-[90vh] overflow-y-auto m-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-white">🎉 Your Agent Requirements</h3>
+                    <button onclick="closeModal()" class="text-white/60 hover:text-white text-2xl">×</button>
+                </div>
+                
+                <div class="mb-6">
+                    <p class="text-white/80 mb-4">
+                        Copy this complete specification and send it to Claude AI Agent for development:
+                    </p>
+                </div>
+                
+                <div class="bg-gray-900 rounded-lg p-4 mb-6">
+                    <textarea id="generated-requirements" readonly 
+                              class="w-full h-96 bg-transparent text-green-400 font-mono text-sm resize-none"
+                              placeholder="Your generated requirements will appear here..."></textarea>
+                </div>
+                
+                <div class="flex gap-4 justify-center">
+                    <button onclick="copyToClipboard()" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+                    </button>
+                    <button onclick="downloadRequirements()" 
+                            class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download as File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Progress tracking
+        function updateProgress() {
+            const form = document.getElementById('requirements-form');
+            const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+            const filled = Array.from(inputs).filter(input => input.value.trim() !== '').length;
+            const total = inputs.length;
+            const percentage = Math.round((filled / total) * 100);
+            
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = percentage + '% Complete';
+        }
+
+        // Add feature functionality
+        function addFeature() {
+            const container = document.getElementById('features-container');
+            const featureDiv = document.createElement('div');
+            featureDiv.className = 'feature-item mb-4';
+            featureDiv.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" name="featureName[]" 
+                           class="form-input px-4 py-3 rounded-lg"
+                           placeholder="Feature name">
+                    <input type="text" name="featureAction[]" 
+                           class="form-input px-4 py-3 rounded-lg"
+                           placeholder="User action">
+                    <input type="text" name="featureResult[]" 
+                           class="form-input px-4 py-3 rounded-lg"
+                           placeholder="Expected result">
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" 
+                        class="mt-2 text-red-400 hover:text-red-300 text-sm">
+                    <i class="fas fa-trash mr-1"></i>Remove
+                </button>
+            `;
+            container.appendChild(featureDiv);
+        }
+
+        // Agent type selection
+        document.querySelectorAll('input[name="agentType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const customDiv = document.getElementById('custom-agent-type');
+                if (this.value === 'custom') {
+                    customDiv.classList.remove('hidden');
+                } else {
+                    customDiv.classList.add('hidden');
+                }
+                
+                // Update card styling
+                document.querySelectorAll('.agent-type-card').forEach(card => {
+                    card.classList.remove('border-blue-400', 'border-green-400', 'border-purple-400', 'border-yellow-400');
+                    card.classList.add('border-white/30');
+                });
+                
+                const selectedCard = this.parentElement.querySelector('.agent-type-card');
+                const colors = {
+                    'financial': 'border-blue-400',
+                    'lead-generation': 'border-green-400',
+                    'operations': 'border-purple-400',
+                    'custom': 'border-yellow-400'
+                };
+                selectedCard.classList.remove('border-white/30');
+                selectedCard.classList.add(colors[this.value]);
+            });
+        });
+
+        // Dropbox integration toggle
+        document.getElementById('needsDropbox').addEventListener('change', function() {
+            const details = document.getElementById('dropbox-details');
+            if (this.checked) {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+        });
+        
+        // n8n integration toggle
+        document.getElementById('needsN8n').addEventListener('change', function() {
+            const details = document.getElementById('n8n-details');
+            if (this.checked) {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+        });
+        
+        // Project type selection
+        document.querySelectorAll('input[name="projectType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const existingSection = document.getElementById('existing-agent-section');
+                
+                if (this.value === 'modify-existing') {
+                    existingSection.classList.remove('hidden');
+                } else {
+                    existingSection.classList.add('hidden');
+                }
+                
+                // Update card styling
+                document.querySelectorAll('.project-type-card').forEach(card => {
+                    card.classList.remove('border-green-400', 'border-blue-400', 'border-orange-400');
+                    card.classList.add('border-white/30');
+                });
+                
+                const selectedCard = this.parentElement.querySelector('.project-type-card');
+                const colors = {
+                    'new-agent': 'border-green-400',
+                    'modify-existing': 'border-blue-400',
+                    'n8n-workflow': 'border-orange-400'
+                };
+                selectedCard.classList.remove('border-white/30');
+                selectedCard.classList.add(colors[this.value]);
+                
+                // Auto-generate names
+                updateAgentNaming();
+            });
+        });
+        
+        // Auto-generate agent names
+        function updateAgentNaming() {
+            const projectType = document.querySelector('input[name="projectType"]:checked')?.value;
+            const agentName = document.querySelector('input[name="agentName"]')?.value || '';
+            const businessPurpose = document.querySelector('textarea[name="businessPurpose"]')?.value || '';
+            
+            let autoName = '';
+            let handoffName = '';
+            
+            if (projectType === 'new-agent') {
+                // Auto-generate Agent###Purpose format
+                const purposeKeyword = extractPurposeKeyword(agentName || businessPurpose);
+                const nextNumber = getNextAgentNumber();
+                autoName = `Agent${String(nextNumber).padStart(3, '0')}${purposeKeyword}`;
+                handoffName = `${autoName}_HANDOFF.md`;
+            } else if (projectType === 'modify-existing') {
+                const existingAgent = document.querySelector('select[name="existingAgent"]')?.value;
+                if (existingAgent) {
+                    autoName = existingAgent;
+                    handoffName = `${existingAgent}_HANDOFF.md`;
+                }
+            } else if (projectType === 'n8n-workflow') {
+                const workflowName = agentName.replace(/\s+/g, '') || 'Workflow';
+                autoName = workflowName;
+                handoffName = `${workflowName}_HANDOFF.md`;
+            }
+            
+            document.querySelector('input[name="autoAgentName"]').value = autoName;
+            document.querySelector('input[name="handoffDocName"]').value = handoffName;
+        }
+        
+        function extractPurposeKeyword(text) {
+            const keywords = text.toLowerCase().match(/\b(payroll|lead|sales|crm|financial|report|email|data|sync|import|export|analysis|dashboard)\b/g);
+            if (keywords && keywords.length > 0) {
+                return keywords[0].charAt(0).toUpperCase() + keywords[0].slice(1);
+            }
+            return 'Agent';
+        }
+        
+        function getNextAgentNumber() {
+            // In a real system, this would check existing agents
+            // For now, start from 002 since Agent001 exists
+            return 2;
+        }
+        
+        function getTimelineFromPriority(priority) {
+            const timelines = {
+                'urgent': '🚨 SAME DAY (Immediate attention required)',
+                'high': '🔥 1-2 DAYS (High priority development)',
+                'medium': '⚡ 3-5 DAYS (Standard development cycle)', 
+                'normal': '📅 1 WEEK (Normal development timeline)',
+                'low': '🗓️ 2-3 WEEKS (Lower priority, planned development)',
+                'backlog': '📋 1+ MONTHS (Backlog item, scheduled when capacity allows)',
+                'research': '🔬 RESEARCH PHASE (Timeline TBD - requires analysis first)'
+            };
+            return timelines[priority] || '⚡ 3-5 DAYS (Standard development cycle)';
+        }
+        
+        // Update agent naming on input changes
+        document.querySelector('input[name="agentName"]')?.addEventListener('input', updateAgentNaming);
+        document.querySelector('textarea[name="businessPurpose"]')?.addEventListener('input', updateAgentNaming);
+        document.querySelector('select[name="existingAgent"]')?.addEventListener('change', updateAgentNaming);
+
+        // Form submission
+        document.getElementById('requirements-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateRequirements();
+        });
+
+        function generateRequirements() {
+            const formData = new FormData(document.getElementById('requirements-form'));
+            let requirements = `# 🚀 SUPER POWER AI AGENT DEVELOPMENT REQUEST
+## Complete Project Specification with SOP Integration
+
+**Generated on:** ${new Date().toLocaleDateString()}
+**Requested by:** ${formData.get('companyName')}
+**Auto-Generated Name:** ${formData.get('autoAgentName')}
+**Handoff Document:** ${formData.get('handoffDocName')}
+
+---
+
+## ⚡ SUPER POWER SOP INTEGRATION
+
+**Project Type:** ${formData.get('projectType')}
+${formData.get('projectType') === 'modify-existing' ? `**Existing Agent:** ${formData.get('existingAgent')}` : ''}
+**File Location:** C:\\Users\\physi\\OneDrive\\Desktop\\my-n8n-workflows
+**Follow Protocol:** Always review handoff document before starting
+**End Protocol:** Create/update handoff document when complete
+
+---
+
+## 📋 PROJECT OVERVIEW
+
+**Agent Name:** ${formData.get('agentName')}
+**Company:** ${formData.get('companyName')}
+**Industry:** ${formData.get('industry') || 'Not specified'}
+**Priority:** ${formData.get('priority')}
+
+**Business Purpose:**
+${formData.get('businessPurpose')}
+
+**Agent Type:** ${formData.get('agentType')}${formData.get('agentType') === 'custom' ? ' - ' + formData.get('customAgentType') : ''}
+
+---
+
+## 🎯 ENHANCED BUSINESS CONTEXT
+
+**Current Problem/Pain Point:**
+${formData.get('currentProblem')}
+
+**Manual Process Being Automated:**
+${formData.get('manualProcess') || 'Not specified'}
+
+**Expected ROI/Time Savings:** ${formData.get('expectedROI') || 'Not specified'}
+**Key Stakeholders/Users:** ${formData.get('stakeholders') || 'Not specified'}
+
+---
+
+## 🔧 CORE FEATURES REQUIRED
+
+`;
+
+            // Add features
+            const featureNames = formData.getAll('featureName[]');
+            const featureActions = formData.getAll('featureAction[]');
+            const featureResults = formData.getAll('featureResult[]');
+
+            featureNames.forEach((name, index) => {
+                if (name.trim()) {
+                    requirements += `### Feature ${index + 1}: ${name}
+- **User Action:** ${featureActions[index] || 'Not specified'}
+- **Expected Result:** ${featureResults[index] || 'Not specified'}
+
+`;
+                }
+            });
+
+            // Add data requirements
+            const inputTypes = formData.getAll('inputTypes[]');
+            const outputTypes = formData.getAll('outputTypes[]');
+
+            // Add technical integration section
+            const apiIntegrations = formData.getAll('apiIntegrations[]');
+            const n8nFeatures = formData.getAll('n8nFeatures[]');
+            const errorHandling = formData.getAll('errorHandling[]');
+            
+            requirements += `---
+
+## 💾 DATA & FILE REQUIREMENTS
+
+**Input Data Types:**
+${inputTypes.length > 0 ? inputTypes.map(type => `- ${type.toUpperCase()}`).join('\n') : '- None specified'}
+
+**Output Requirements:**
+${outputTypes.length > 0 ? outputTypes.map(type => `- ${type.toUpperCase()}`).join('\n') : '- None specified'}
+
+---
+
+## 🔌 TECHNICAL INTEGRATION REQUIREMENTS
+
+**n8n Integration Required:** ${formData.get('needsN8n') ? 'YES' : 'NO'}
+${formData.get('needsN8n') && n8nFeatures.length > 0 ? `\n**n8n Features:** ${n8nFeatures.map(f => f.replace('-', ' ')).join(', ')}` : ''}
+
+**API Integrations Required:**
+${apiIntegrations.length > 0 ? apiIntegrations.map(api => `- ${api.replace('-', ' ').toUpperCase()}`).join('\n') : '- None specified'}
+
+**Processing Type:** ${formData.get('processingType')}
+**Database Requirements:** ${formData.get('databaseNeeds')}
+
+---
+
+## 📈 SUCCESS METRICS & TESTING
+
+**Testing Method:**
+${formData.get('testingMethod')}
+
+**Sample Data Available:** ${formData.get('hasSampleData') ? 'YES' : 'NO'}
+${formData.get('sampleDataDesc') ? `\n**Sample Data:** ${formData.get('sampleDataDesc')}` : ''}
+
+**Performance Benchmarks:** ${formData.get('performanceBenchmarks') || 'Standard performance expected'}
+**Accuracy Requirements:** ${formData.get('accuracyRequirements') || 'High accuracy expected'}
+
+**Error Handling Required:**
+${errorHandling.length > 0 ? errorHandling.map(err => `- ${err.replace('-', ' ').toUpperCase()}`).join('\n') : '- Standard error handling'}
+
+**Success Definition:**
+${formData.get('successDefinition') || 'Agent functions as specified and meets business requirements'}
+
+---
+
+## ☁️ DROPBOX INTEGRATION
+
+**Dropbox Required:** ${formData.get('needsDropbox') ? 'YES' : 'NO'}
+
+`;
+
+            if (formData.get('needsDropbox')) {
+                const dropboxPerms = formData.getAll('dropboxPerms[]');
+                requirements += `**Folder Structure:** ${formData.get('dropboxFolder') || 'Standard structure'}
+
+**Permissions Needed:**
+${dropboxPerms.length > 0 ? dropboxPerms.map(perm => `- ${perm.toUpperCase()}`).join('\n') : '- Read and Write access'}
+
+`;
+            }
+
+            requirements += `---
+
+## 🎨 UI/UX REQUIREMENTS
+
+**UI Style:** ${formData.get('uiStyle')}
+**Layout Type:** ${formData.get('layoutType')}
+**Primary Color:** ${formData.get('primaryColor')}
+**Secondary Color:** ${formData.get('secondaryColor')}
+
+---
+
+## 📋 ADDITIONAL REQUIREMENTS
+
+**Special Features:**
+${formData.get('specialRequirements') || 'None specified'}
+
+**Success Criteria:**
+${formData.get('successCriteria') || 'Standard functionality and user satisfaction'}
+
+**Additional Notes:**
+${formData.get('additionalNotes') || 'None'}
+
+---
+
+## 🎯 SUPER POWER DEVELOPMENT REQUEST
+
+**Claude AI Agent:** Please build this AI agent according to the above specifications using our Super Power SOP:
+
+### ⚡ **SUPER POWER PROTOCOLS:**
+1. **File Location Protocol:** Always work in C:\\Users\\physi\\OneDrive\\Desktop\\my-n8n-workflows
+2. **Naming Convention:** Use auto-generated name: ${formData.get('autoAgentName')}
+3. **Handoff Protocol:** Create ${formData.get('handoffDocName')} at session end
+4. **Review Protocol:** Check existing handoff documents before starting
+
+### 🎨 **TECHNICAL STANDARDS:**
+1. **UI Design:** ${formData.get('uiStyle')} (as specified)
+2. **Framework:** Tailwind CSS with responsive design
+3. **Visualizations:** Chart.js for data visualization (if needed)
+4. **Integration:** ${formData.get('needsDropbox') ? 'Dropbox SDK integration' : 'No Dropbox integration'}
+5. **Architecture:** ${formData.get('layoutType')} layout
+6. **Performance:** Meet specified benchmarks and accuracy requirements
+
+### 🔗 **INTEGRATION REQUIREMENTS:**
+${formData.get('needsN8n') ? '- **n8n Integration:** Set up workflow connections as specified' : ''}
+${apiIntegrations.length > 0 ? `- **API Integrations:** ${apiIntegrations.join(', ')}` : ''}
+- **Processing:** ${formData.get('processingType')} processing model
+- **Data Storage:** ${formData.get('databaseNeeds')} solution
+
+**Timeline:** ${getTimelineFromPriority(formData.get('priority'))}
+
+**Ready to build with SUPER POWER efficiency!** ⚡🚀
+
+---
+
+*Generated by SUPER POWER AI Agent Project Builder v2.0 | Enhanced with SOP Integration*`
+
+            document.getElementById('generated-requirements').value = requirements;
+            document.getElementById('output-modal').classList.remove('hidden');
+            document.getElementById('output-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('output-modal').classList.add('hidden');
+            document.getElementById('output-modal').classList.remove('flex');
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('generated-requirements');
+            textarea.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+            button.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-600');
+            }, 2000);
+        }
+
+        function downloadRequirements() {
+            const content = document.getElementById('generated-requirements').value;
+            const agentName = document.querySelector('input[name="agentName"]').value || 'AI-Agent';
+            const filename = `${agentName.replace(/\s+/g, '-')}-requirements.md`;
+            
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Progress tracking on input
+        document.getElementById('requirements-form').addEventListener('input', updateProgress);
+        document.getElementById('requirements-form').addEventListener('change', updateProgress);
+
+        // Initial progress check
+        updateProgress();
+    </script>
+</body>
+</html>
