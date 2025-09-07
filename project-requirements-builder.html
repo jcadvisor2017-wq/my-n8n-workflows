@@ -1056,11 +1056,19 @@ ${formData.get('additionalNotes') || 'None'}
 5. **Architecture:** ${formData.get('layoutType')} layout
 6. **Performance:** Meet specified benchmarks and accuracy requirements
 
-### 🔗 **INTEGRATION REQUIREMENTS:**
+## 🔗 **INTEGRATION REQUIREMENTS:**
 ${formData.get('needsN8n') ? '- **n8n Integration:** Set up workflow connections as specified' : ''}
 ${apiIntegrations.length > 0 ? `- **API Integrations:** ${apiIntegrations.join(', ')}` : ''}
 - **Processing:** ${formData.get('processingType')} processing model
 - **Data Storage:** ${formData.get('databaseNeeds')} solution
+
+## 🔗 **DROPBOX PROTOCOL REMINDER:**
+
+${formData.get('needsDropbox') ? `⚡ **MANDATORY:** Use proven Dropbox template
+✅ **Template:** DropboxIntegrationTemplate.html
+🔑 **Production Key:** 22cs1wh095ggc1c
+🚨 **NEVER build Dropbox code from scratch - ALWAYS use proven template!**
+` : 'ℹ️ No Dropbox integration required for this project'}
 
 **Timeline:** ${getTimelineFromPriority(formData.get('priority'))}
 
