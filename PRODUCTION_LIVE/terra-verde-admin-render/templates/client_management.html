@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿 Terra Verde - Client Management</title>
+<style>
+        :root {
+            --terra-blue-primary: #1e3a8a;
+            --terra-blue-secondary: #1e40af;
+            --terra-blue-accent: #3b82f6;
+            --terra-blue-light: #dbeafe;
+            --terra-blue-dark: #1e1b4b;
+            --terra-yellow: #fbbf24;
+            --terra-green: #10b981;
+            --terra-red: #ef4444;
+            
+            /* Terra Verde specific colors */
+            --terra-verde-primary: #34bfb7;
+            --terra-verde-secondary: #2aa59d;
+            --terra-verde-accent: #4dd6ce;
+            --terra-verde-light: #e6f7f5;
+            --terra-verde-dark: #1a5a55;
+            --terra-verde-success: #10b981;
+            --terra-verde-warning: #fbbf24;
+            --terra-verde-error: #ef4444;
+            --terra-verde-platinum: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--terra-blue-dark) 0%, var(--terra-blue-primary) 100%);
+            min-height: 100vh;
+            color: white;
+            will-change: transform; /* Optimization for smoother animations */
+            contain: content; /* Improves scrolling performance */
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .client-management-header {
+            background: linear-gradient(135deg, var(--terra-verde-primary) 0%, var(--terra-verde-secondary) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(52, 191, 183, 0.3), 0 0 30px rgba(52, 191, 183, 0.1);
+            text-align: center;
+        }
+
+        .client-management-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .client-management-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .client-form-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .client-form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--terra-yellow);
+        }
+
+        .form-header {
+            color: var(--terra-yellow);
+            padding: 0;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--terra-blue-dark);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--terra-yellow);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-terra-verde {
+            background: var(--terra-green);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-terra-verde:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success {
+            background: var(--terra-green);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .clients-list-section {
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--terra-verde-light) 100%);
+            border: 3px solid var(--terra-verde-primary);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(52, 191, 183, 0.2), 0 0 20px rgba(52, 191, 183, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clients-list-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(135deg, var(--terra-verde-primary) 0%, var(--terra-verde-accent) 100%);
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            /* Performance optimizations for smooth scrolling */
+            will-change: scroll-position;
+            backface-visibility: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            contain: layout style paint;
+            transform: translateZ(0); /* Force GPU acceleration */
+        }
+
+        .client-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FFFF 100%);
+            border: 2px solid var(--terra-verde-accent);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(52, 191, 183, 0.1);
+            transition: all 0.3s ease;
+            /* Performance optimizations */
+            will-change: transform, box-shadow;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            contain: layout style;
+        }
+
+        .client-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(52, 191, 183, 0.2);
+            border-color: var(--terra-verde-primary);
+        }
+
+        .client-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--terra-verde-primary) 0%, var(--terra-verde-accent) 100%);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .client-name {
+            font-size: 1.4rem !important;
+            font-weight: 700 !important;
+            color: #34bfb7 !important;
+            margin-bottom: 0.8rem !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+            display: block !important;
+            line-height: 1.3 !important;
+        }
+
+        .client-address {
+            color: var(--terra-verde-dark);
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-warning {
+            background: var(--terra-verde-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--terra-verde-error);
+            color: white;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: var(--terra-verde-accent);
+            color: var(--terra-verde-dark);
+            border: 2px solid var(--terra-verde-success);
+        }
+
+        .alert-error {
+            background: #FFE4E4;
+            color: #dc2626;
+            border: 3px solid #dc2626;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+                margin: 1rem auto;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .clients-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-top">
+            <div class="logo-section" style="display: flex; align-items: center; gap: 1rem;">
+                <img src="/static/images/terra_verde_logo.jpg" alt="Terra Verde Logo" style="width: 60px; height: 60px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 2px solid var(--terra-verde-accent);" />
+                <div>
+                    <h1 style="margin: 0; font-size: 1.8rem; color: var(--terra-verde-accent); text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Terra Verde</h1>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--terra-verde-platinum); opacity: 0.8;">Client Management</p>
+                </div>
+            </div>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE SYSTEM</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="/admin">📊 Dashboard</a>
+            <a href="/admin/clients" class="active">🏢 Client Maintenance</a>
+            <a href="/admin/geofence-setup">🗺️ Geofence Maintenance</a>
+            <a href="/admin/employees">👥 Employee Maintenance</a>
+            <a href="/admin/escalation-personnel" class="escalation">🚨 Critical Escalation Maintenance</a>
+            <a href="/admin/reporting">📈 Reporting Module</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Client Management Header -->
+        <div class="client-management-header">
+            <h2>🏢 Client Management System</h2>
+            <p>Manage your clients and automatically link them to geofences for streamlined operations</p>
+        </div>
+
+        <!-- Add New Client Form -->
+        <div class="client-form-section">
+            <div class="form-header">
+                ➕ Add New Client
+            </div>
+            
+            <form id="clientForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="clientName">🏢 Client Name:</label>
+                        <input type="text" id="clientName" class="form-control" placeholder="e.g., Gulfstream Park Racing" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientAddress">📍 Complete Florida Address:</label>
+                        <div style="position: relative;">
+                            <input type="text" id="clientAddress" class="form-control" placeholder="e.g., 901 S Federal Hwy, Hallandale Beach, FL 33009" required>
+                            <div id="verificationStatus" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: none;">
+                                <span id="verifiedIcon" style="color: green; font-size: 1.2rem;">✓</span>
+                            </div>
+                        </div>
+                        <small style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; margin-top: 0.25rem; display: block;">
+                            ✨ Just start typing - smart suggestions will appear automatically!
+                        </small>
+                        <div id="addressSuggestions" style="display: none; margin-top: 0.5rem; background: white; border: 2px solid #34bfb7; border-radius: 8px; padding: 1rem; max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button type="submit" class="btn btn-terra-verde">💾 Save Client</button>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <small style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem;">
+                        ✨ Addresses are automatically verified when selected from suggestions
+                    </small>
+                </div>
+            </form>
+
+            <div id="formMessage" style="display: none;"></div>
+        </div>
+
+        <!-- Existing Clients List -->
+        <div class="clients-list-section">
+            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>🏢 Existing Clients</span>
+                <button onclick="loadClients()" class="btn btn-terra-verde btn-sm" style="font-size: 0.8rem; padding: 0.5rem 1rem;">
+                    🔄 Refresh List
+                </button>
+            </div>
+            
+            <div id="clientsGrid" class="clients-grid">
+                <div style="text-align: center; padding: 2rem; opacity: 0.6; grid-column: 1 / -1;">
+                    Loading clients...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load clients on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 JavaScript loaded successfully!');
+            console.log('DOM elements found:', {
+                clientName: document.getElementById('clientName'),
+                clientAddress: document.getElementById('clientAddress'),
+                addressSuggestions: document.getElementById('addressSuggestions')
+            });
+            
+            loadClients();
+            
+            // Reset verification when address changes AND provide real-time suggestions
+            let addressTimeout;
+            let lastSearchTime = 0;
+            
+            document.getElementById('clientAddress').addEventListener('input', function() {
+                const currentAddress = this.value.trim();
+                const clientName = document.getElementById('clientName').value.trim();
+                const now = Date.now();
+                
+                console.log('Address input changed:', {
+                    address: currentAddress,
+                    clientName: clientName,
+                    length: currentAddress.length
+                });
+                
+                // Reset verification status
+                if (window.lastVerifiedAddress && currentAddress !== window.lastVerifiedAddress) {
+                    window.addressVerified = false;
+                    window.lastVerifiedAddress = null;
+                    
+                    // Hide verification icon
+                    document.getElementById('verificationStatus').style.display = 'none';
+                }
+                
+                // Clear previous timeout
+                if (addressTimeout) {
+                    clearTimeout(addressTimeout);
+                }
+                
+                // Allow searches even if dropdown is visible
+                const suggestionsDiv = document.getElementById('addressSuggestions');
+                
+                // Provide real-time suggestions after user stops typing
+                if (currentAddress.length >= 3) {
+                    console.log('Setting timeout for suggestions...');
+                    
+                    addressTimeout = setTimeout(() => {
+                        console.log('Timeout triggered, calling provideRealTimeSuggestions');
+                        provideRealTimeSuggestions(currentAddress, clientName);
+                    }, 1200); // Slightly longer delay for stability
+                } else if (currentAddress.length < 2) {
+                    // Only hide suggestions if address is very short
+                    suggestionsDiv.style.display = 'none';
+                    console.log('Address too short, hiding suggestions');
+                }
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('clientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveClient();
+        });
+
+        async function saveClient() {
+            const name = document.getElementById('clientName').value.trim();
+            const address = document.getElementById('clientAddress').value.trim();
+            
+            console.log('Save attempt:', {
+                name: name,
+                address: address,
+                addressVerified: window.addressVerified,
+                lastVerifiedAddress: window.lastVerifiedAddress,
+                coordinates: window.verifiedCoordinates
+            });
+            
+            if (!name || !address) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Check if address has been verified from suggestions
+            if (!window.addressVerified || window.lastVerifiedAddress !== address) {
+                console.log('SAVE VALIDATION FAILED:', {
+                    addressVerified: window.addressVerified,
+                    addressMatch: window.lastVerifiedAddress === address,
+                    lastVerified: window.lastVerifiedAddress,
+                    current: address,
+                    lastVerifiedLength: window.lastVerifiedAddress ? window.lastVerifiedAddress.length : 0,
+                    currentLength: address.length,
+                    exactMatch: window.lastVerifiedAddress === address
+                });
+                
+                // More helpful error message
+                if (!window.addressVerified) {
+                    showMessage('❌ Address not verified. Please use the smart suggestions or manual entry.', 'error');
+                } else {
+                    showMessage(`❌ Address mismatch. Verified: "${window.lastVerifiedAddress}" vs Current: "${address}". Please re-select the address.`, 'error');
+                }
+                return;
+            }
+            
+            console.log('SAVE VALIDATION PASSED:', {
+                addressVerified: window.addressVerified,
+                lastVerified: window.lastVerifiedAddress,
+                current: address,
+                coordinates: window.verifiedCoordinates
+            });
+            
+            const form = document.getElementById('clientForm');
+            const editId = form.getAttribute('data-edit-id');
+            const isEdit = !!editId;
+            
+            const method = isEdit ? 'PUT' : 'POST';
+            const url = isEdit ? `/api/clients?id=${editId}` : '/api/clients';
+
+            try {
+                showMessage(isEdit ? '🔄 Updating client...' : '💾 Saving client...', 'success');
+                
+                const clientData = { 
+                    name, 
+                    address,
+                    geofence_latitude: window.verifiedCoordinates?.lat,
+                    geofence_longitude: window.verifiedCoordinates?.lng,
+                    verified: true
+                };
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(clientData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    const message = isEdit ? '✅ Client updated successfully!' : '✅ Client saved successfully!';
+                    const geoMessage = result.geocoded ? '<br><small>🌍 Address geocoded successfully!</small>' : 
+                                     result.coordinates ? '<br><small>🗺 Using existing coordinates</small>' : 
+                                     '<br><small>⚠ Could not geocode address, but client saved</small>';
+                    
+                    showMessage(message + geoMessage, 'success');
+                    
+                    // Reset form to add mode
+                    document.getElementById('clientForm').reset();
+                    form.removeAttribute('data-edit-id');
+                    document.querySelector('.form-header').innerHTML = '➥ Add New Client';
+                    document.querySelector('button[type="submit"]').innerHTML = '💾 Save Client';
+                    
+                    // Reset verification status
+                    window.addressVerified = false;
+                    window.lastVerifiedAddress = null;
+                    window.verifiedCoordinates = null;
+                    document.getElementById('verificationStatus').style.display = 'none';
+                    
+                    // Remove cancel button if exists
+                    const cancelBtn = document.getElementById('cancelEdit');
+                    if (cancelBtn) {
+                        cancelBtn.remove();
+                    }
+                    
+                    loadClients();
+                } else {
+                    showMessage('❌ Error saving client: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error saving client:', error);
+                showMessage('❌ Error saving client. Please try again.', 'error');
+            }
+        }
+
+        async function loadClients() {
+            const grid = document.getElementById('clientsGrid');
+            grid.innerHTML = '<div style="text-align: center; padding: 1rem;">⏳ Loading...</div>';
+            
+            try {
+                const response = await fetch('/api/clients');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('API Response:', data); // Debug logging
+                
+                // Handle different API response formats
+                let clients = [];
+                if (Array.isArray(data)) {
+                    clients = data; // Direct array
+                } else if (data.clients && Array.isArray(data.clients)) {
+                    clients = data.clients; // Wrapped in object
+                } else if (data.success && data.data) {
+                    clients = Array.isArray(data.data) ? data.data : [];
+                } else {
+                    console.warn('Unexpected API response format:', data);
+                    clients = [];
+                }
+                
+                console.log('Processed clients:', clients); // Debug logging
+                
+                if (clients.length === 0) {
+                    grid.innerHTML = '<div style="text-align: center; padding: 2rem; opacity: 0.6; color: #666;">No clients found. Add your first client above!</div>';
+                    return;
+                }
+
+                // Use DocumentFragment for better performance
+                const fragment = document.createDocumentFragment();
+                
+                clients.forEach(client => {
+                    const name = (client.name || 'Unnamed Client').replace(/'/g, "&apos;");
+                    const address = client.address || 'No address';
+                    
+                    const clientDiv = document.createElement('div');
+                    clientDiv.className = 'client-card';
+                    clientDiv.innerHTML = `
+                        <div class="client-header">
+                            <div>
+                                <div class="client-name" style="font-size: 1.4rem; font-weight: bold; color: #34bfb7; margin-bottom: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                                    🏢 ${name}
+                                </div>
+                                <div class="client-address" style="font-size: 1rem; color: #555; margin-bottom: 0.8rem; line-height: 1.4;">
+                                    📍 ${address}
+                                </div>
+                                <div style="font-size: 0.85rem; color: #888; background: #f8f9fa; padding: 0.5rem; border-radius: 6px; border-left: 3px solid #34bfb7;">
+                                    🌍 <strong>Coordinates:</strong> ${client.latitude ? client.latitude.toFixed(6) : 'N/A'}, ${client.longitude ? client.longitude.toFixed(6) : 'N/A'}
+                                    <br>🔄 <strong>Geofence Radius:</strong> ${client.geofence_radius || client.geofence_radius_meters || 100}m
+                                    <br>📅 <strong>Added:</strong> ${client.created_at ? new Date(client.created_at).toLocaleDateString() : 'Unknown'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-actions">
+                            <button onclick="editClient(${client.id})" class="btn btn-terra-verde btn-sm">✏️ Edit</button>
+                            <button onclick="deleteClient(${client.id}, '${name}')" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                            <button onclick="createGeofence(${client.id})" class="btn btn-warning btn-sm">🗺️ Geofence</button>
+                        </div>
+                    `;
+                    fragment.appendChild(clientDiv);
+                });
+                
+                // Single DOM update for better performance
+                grid.innerHTML = '';
+                grid.appendChild(fragment);
+                
+                console.log(`\u2705 Loaded ${clients.length} clients successfully`);
+                
+            } catch (error) {
+                grid.innerHTML = `<div style="text-align: center; padding: 2rem; color: #dc2626; font-weight: bold;">❌ Error: ${error.message}</div>`;
+                showMessage(`❌ Error loading clients: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAddress() {
+            const address = document.getElementById('clientAddress').value.trim();
+            if (!address) {
+                showMessage('Please enter an address to test', 'error');
+                return;
+            }
+
+            // Validate address completeness for Florida
+            if (!validateFloridaAddress(address)) {
+                return;
+            }
+
+            showMessage('🔍 Testing Florida address...', 'success');
+            
+            // Reset verification status
+            window.addressVerified = false;
+            window.lastVerifiedAddress = null;
+            
+            try {
+                // Use OpenStreetMap Nominatim with Florida restriction
+                const searchQuery = address + ', Florida, USA';
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=5&countrycodes=us&addressdetails=1`);
+                const results = await response.json();
+
+                if (results && results.length > 0) {
+                    // Filter for Florida results only
+                    const floridaResults = results.filter(result => {
+                        const displayName = result.display_name.toLowerCase();
+                        return displayName.includes('florida') || displayName.includes(', fl,');
+                    });
+
+                    if (floridaResults.length > 0) {
+                        const result = floridaResults[0];
+                        
+                        // Additional Florida validation
+                        const lat = parseFloat(result.lat);
+                        const lon = parseFloat(result.lon);
+                        
+                        // Florida bounding box: roughly 24.396308 to 31.000888 latitude, -87.634896 to -79.974306 longitude
+                        if (lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5) {
+                            // Set verification status
+                            window.addressVerified = true;
+                            window.lastVerifiedAddress = address;
+                            window.verifiedCoordinates = {
+                                lat: lat,
+                                lng: lon
+                            };
+                            
+                            // Show verification icon
+                            document.getElementById('verificationStatus').style.display = 'block';
+                            
+                            showMessage(`✅ Florida address verified successfully!<br><strong>Location:</strong> ${result.display_name}<br><strong>Coordinates:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}<br><strong style="color: green;">✓ Address is now verified for saving</strong>`, 'success');
+                        } else {
+                            showMessage('❌ Address coordinates are not within Florida. Please verify the address is correct.', 'error');
+                        }
+                    } else {
+                        showMessage('❌ Address not found in Florida. Please enter a complete Florida address (street, city, FL ZIP).', 'error');
+                    }
+                } else {
+                    showMessage('❌ Address not found. Please enter a complete Florida address format: Street Number, Street Name, City, FL ZIP', 'error');
+                }
+            } catch (error) {
+                console.error('Address test error:', error);
+                showMessage('❌ Error testing address. Please try again.', 'error');
+            }
+        }
+        
+        function validateFloridaAddress(address) {
+            // Check for minimum required components
+            const addressLower = address.toLowerCase().trim();
+            
+            // Must have at least street number and street name
+            const hasStreetNumber = /\d+/.test(address);
+            const hasStreetName = /\b(st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ct|court|ln|lane|way|pl|place|pkwy|parkway|hwy|highway)\b/i.test(address);
+            const hasZipCode = /\b\d{5}(-\d{4})?\b/.test(address);
+            const hasFlOrida = addressLower.includes('fl') || addressLower.includes('florida');
+            
+            if (!hasStreetNumber) {
+                showMessage('❌ Missing street number. Please include a street number (e.g., "123" in "123 Main St").', 'error');
+                return false;
+            }
+            
+            if (!hasStreetName) {
+                showMessage('❌ Missing street type. Please include street type (St, Ave, Rd, Blvd, Dr, etc.) in the address.', 'error');
+                return false;
+            }
+            
+            // Check address length for completeness
+            if (address.length < 15) {
+                showMessage('❌ Address appears incomplete. Please provide: Street Number, Street Name, City, FL, ZIP Code', 'error');
+                return false;
+            }
+            
+            // Check for city (assume if it has commas, it likely has city)
+            if (!address.includes(',')) {
+                showMessage('❌ Please include city in address. Format: Street, City, FL ZIP<br>Example: "901 S Federal Hwy, Hallandale Beach, FL 33009"', 'error');
+                return false;
+            }
+            
+            // Check for Florida identifier
+            if (!hasFlOrida) {
+                showMessage('❌ Please include "FL" or "Florida" in the address to specify the state.', 'error');
+                return false;
+            }
+            
+            // Check for ZIP code - if missing, offer to find suggestions
+            if (!hasZipCode) {
+                // If address has basic components, offer to find suggestions
+                if ((hasStreetNumber && hasStreetName) || address.includes(',') || hasFlOrida) {
+                    showAddressSuggestions(address);
+                    return false;
+                } else {
+                    showMessage('❌ Please include more address information. Try: Street Name, City, FL or just the street/city you\'re looking for.', 'error');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        async function showAddressSuggestions(partialAddress) {
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            
+            try {
+                const clientName = document.getElementById('clientName').value.trim();
+                
+                // If we have both client name and partial address, do intelligent business search
+                if (clientName && clientName.length > 2) {
+                    showMessage(`🔍 Looking for ${clientName} locations in Florida...`, 'success');
+                    
+                    // Search for business name + location in Florida
+                    const businessSearchQuery = `${clientName} ${partialAddress}, Florida, USA`;
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(businessSearchQuery)}&limit=15&countrycodes=us&addressdetails=1`);
+                    const results = await response.json();
+                    
+                    // Also try a broader search if first one doesn't yield many results
+                    let fallbackResults = [];
+                    if (results.length < 3) {
+                        const broaderQuery = `${clientName}, Florida, USA`;
+                        const fallbackResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(broaderQuery)}&limit=10&countrycodes=us&addressdetails=1`);
+                        fallbackResults = await fallbackResponse.json();
+                    }
+                    
+                    const allResults = [...results, ...fallbackResults];
+                    processBusinessSearchResults(allResults, clientName, partialAddress);
+                    
+                } else {
+                    showMessage('🔍 Looking for matching Florida addresses...', 'success');
+                    
+                    // Fallback to regular address search
+                    const searchQuery = partialAddress + ', Florida, USA';
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=10&countrycodes=us&addressdetails=1`);
+                    const results = await response.json();
+                    processRegularAddressResults(results, partialAddress);
+                }
+                
+            } catch (error) {
+                console.error('Address suggestion error:', error);
+                showMessage('❌ Error finding address suggestions. Please try again.', 'error');
+            }
+        }
+        
+        function processBusinessSearchResults(results, clientName, partialAddress) {
+            if (results && results.length > 0) {
+                // Filter for Florida results only
+                const floridaResults = results.filter(result => {
+                    const displayName = result.display_name.toLowerCase();
+                    return displayName.includes('florida') || displayName.includes(', fl,');
+                });
+                
+                if (floridaResults.length > 0) {
+                    const businessOptions = [];
+                    const seenAddresses = new Set();
+                    
+                    floridaResults.forEach(result => {
+                        const address = result.display_name;
+                        const lat = parseFloat(result.lat);
+                        const lon = parseFloat(result.lon);
+                        
+                        // Check if coordinates are in Florida
+                        if (lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5) {
+                            const zipMatch = address.match(/\b(\d{5})\b/);
+                            if (!seenAddresses.has(address)) {
+                                businessOptions.push({
+                                    fullAddress: address,
+                                    zipCode: zipMatch ? zipMatch[1] : 'N/A',
+                                    lat: lat,
+                                    lon: lon,
+                                    businessName: clientName
+                                });
+                                seenAddresses.add(address);
+                            }
+                        }
+                    });
+                    
+                    if (businessOptions.length > 0) {
+                        displayBusinessSuggestions(businessOptions, clientName, partialAddress);
+                    } else {
+                        showMessage(`❌ No ${clientName} locations found in Florida. Try a different street or city.`, 'error');
+                    }
+                } else {
+                    showMessage(`❌ No ${clientName} locations found in Florida. Please check the business name and location.`, 'error');
+                }
+            } else {
+                showMessage(`❌ No ${clientName} locations found. Please check the business name and location.`, 'error');
+            }
+        }
+        
+        function processRegularAddressResults(results, partialAddress) {
+            if (results && results.length > 0) {
+                // Filter for Florida results only
+                const floridaResults = results.filter(result => {
+                    const displayName = result.display_name.toLowerCase();
+                    return displayName.includes('florida') || displayName.includes(', fl,');
+                });
+                
+                if (floridaResults.length > 0) {
+                    // Extract unique ZIP codes and addresses
+                    const addressOptions = [];
+                    const seenAddresses = new Set();
+                    
+                    floridaResults.forEach(result => {
+                        const address = result.display_name;
+                        const lat = parseFloat(result.lat);
+                        const lon = parseFloat(result.lon);
+                        
+                        // Check if coordinates are in Florida
+                        if (lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5) {
+                            const zipMatch = address.match(/\b(\d{5})\b/);
+                            if (zipMatch && !seenAddresses.has(address)) {
+                                addressOptions.push({
+                                    fullAddress: address,
+                                    zipCode: zipMatch[1],
+                                    lat: lat,
+                                    lon: lon
+                                });
+                                seenAddresses.add(address);
+                            }
+                        }
+                    });
+                    
+                    if (addressOptions.length > 0) {
+                        displayAddressSuggestions(addressOptions, partialAddress);
+                    } else {
+                        showMessage('❌ No matching Florida addresses found with ZIP codes. Please try a different city or add ZIP code manually.', 'error');
+                    }
+                } else {
+                    showMessage('❌ No matching addresses found in Florida. Please check the city name and try again.', 'error');
+                }
+            } else {
+                showMessage('❌ No addresses found. Please check the street and city name.', 'error');
+            }
+        }
+        
+        function displayBusinessSuggestions(businessOptions, clientName, partialAddress) {
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            
+            let html = `
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="color: #34bfb7; margin-bottom: 0.5rem; font-size: 1.1rem;">🏢 Found ${businessOptions.length} ${clientName} location${businessOptions.length > 1 ? 's' : ''} in Florida:</h4>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Click on a ${clientName} location to select it as your client address.</p>
+                </div>
+            `;
+            
+            businessOptions.slice(0, 10).forEach((option, index) => {
+                // Format the business address nicely
+                const parts = option.fullAddress.split(',');
+                let streetAndNumber = parts[0] || '';
+                let city = '';
+                let state = 'FL';
+                let zip = option.zipCode !== 'N/A' ? option.zipCode : '';
+                
+                // Try to extract city
+                for (let i = 1; i < parts.length; i++) {
+                    const part = parts[i].trim();
+                    if (!part.toLowerCase().includes('fl') && !part.toLowerCase().includes('florida') && !part.toLowerCase().includes('united states')) {
+                        if (!city && !/\d{5}/.test(part)) {
+                            city = part;
+                        }
+                    }
+                }
+                
+                const formattedAddress = `${streetAndNumber}${city ? ', ' + city : ''}, FL${zip ? ' ' + zip : ''}`;
+                
+                html += `
+                    <div class="business-suggestion" onclick="selectRealtimeAddress('${formattedAddress.replace(/'/g, "&apos;").replace(/"/g, "&quot;")}', ${option.lat}, ${option.lon})"
+                         style="
+                             padding: 1rem; 
+                             margin-bottom: 0.5rem; 
+                             border: 2px solid #e3f2fd; 
+                             border-radius: 8px; 
+                             cursor: pointer; 
+                             transition: all 0.3s ease;
+                             background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+                         "
+                         onmouseover="this.style.background='linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)'; this.style.borderColor='#34bfb7'; this.style.transform='translateY(-2px)'"
+                         onmouseout="this.style.background='linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%)'; this.style.borderColor='#e3f2fd'; this.style.transform='translateY(0)'">
+                        <div style="font-weight: bold; color: #34bfb7; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                            🏢 ${clientName} - ${city || 'Florida'}
+                        </div>
+                        <div style="font-weight: 600; color: #333; font-size: 1rem; margin-bottom: 0.25rem;">
+                            📍 ${formattedAddress}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666;">
+                            🌍 Coordinates: ${option.lat.toFixed(4)}, ${option.lon.toFixed(4)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #34bfb7;">
+                    <button onclick="closeAddressSuggestions()" class="btn" style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 8px;">
+                        ❌ Close ${clientName} Locations
+                    </button>
+                </div>
+            `;
+            
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.style.display = 'block';
+            
+            showMessage(`🎆 Found ${businessOptions.length} ${clientName} locations! Click on your preferred location.`, 'success');
+        }
+        
+        function displayAddressSuggestions(addressOptions, originalAddress) {
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            
+            let html = `
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="color: #34bfb7; margin-bottom: 0.5rem; font-size: 1.1rem;">📍 Found ${addressOptions.length} matching Florida address${addressOptions.length > 1 ? 'es' : ''}:</h4>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Click on an address to select it, or close to enter ZIP manually.</p>
+                </div>
+            `;
+            
+            addressOptions.slice(0, 8).forEach((option, index) => {
+                // Format the address nicely
+                const parts = option.fullAddress.split(',');
+                let streetAndNumber = parts[0] || '';
+                let city = '';
+                let state = '';
+                let zip = option.zipCode;
+                
+                // Try to extract city and state
+                for (let i = 1; i < parts.length; i++) {
+                    const part = parts[i].trim();
+                    if (part.toLowerCase().includes('fl') || part.toLowerCase().includes('florida')) {
+                        state = 'FL';
+                        if (i > 1) city = parts[i-1].trim();
+                    }
+                }
+                
+                const formattedAddress = `${streetAndNumber}${city ? ', ' + city : ''}, ${state} ${zip}`;
+                
+                html += `
+                    <div class="address-suggestion" onclick="selectRealtimeAddress('${formattedAddress.replace(/'/g, "&apos;").replace(/"/g, "&quot;")}', ${option.lat}, ${option.lon})"
+                         style="
+                             padding: 0.75rem; 
+                             margin-bottom: 0.5rem; 
+                             border: 1px solid #ddd; 
+                             border-radius: 6px; 
+                             cursor: pointer; 
+                             transition: all 0.2s ease;
+                             background: #f8f9fa;
+                         "
+                         onmouseover="this.style.background='#e3f2fd'; this.style.borderColor='#34bfb7'"
+                         onmouseout="this.style.background='#f8f9fa'; this.style.borderColor='#ddd'">
+                        <div style="font-weight: bold; color: #34bfb7; font-size: 1rem;">🏢 ${formattedAddress}</div>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
+                            🌍 Coordinates: ${option.lat.toFixed(4)}, ${option.lon.toFixed(4)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div style="text-align: right; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <button onclick="closeAddressSuggestions()" class="btn" style="background: #6c757d; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                        ❌ Close Suggestions
+                    </button>
+                </div>
+            `;
+            
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.style.display = 'block';
+            
+            showMessage(`ℹ️ Found ${addressOptions.length} matching addresses. Click on one to select it!`, 'success');
+        }
+        
+        // Removed old selectAddress function - now using selectRealtimeAddress
+        
+        function closeAddressSuggestions() {
+            document.getElementById('addressSuggestions').style.display = 'none';
+        }
+        
+        function enableManualEntry() {
+            const clientName = document.getElementById('clientName').value.trim();
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            
+            suggestionsDiv.innerHTML = `
+                <div style="padding: 1rem;">
+                    <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #34bfb7;">
+                        <div style="font-weight: bold; color: #34bfb7; font-size: 1rem; margin-bottom: 0.5rem;">
+                            ✍️ Manual Address Entry for ${clientName}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666;">
+                            Enter the complete Florida address exactly as you know it:
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: bold; color: #333; margin-bottom: 0.5rem;">Complete Address:</label>
+                        <input type="text" id="manualAddressInput" placeholder="e.g., 1201 Federal Highway, Fort Lauderdale, FL 33316" 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #34bfb7; border-radius: 6px; font-size: 1rem;"
+                               value="">
+                        <small style="display: block; margin-top: 0.5rem; color: #666; font-size: 0.85rem;">
+                            ℹ️ Include: Street Number, Street Name, City, FL, ZIP Code
+                        </small>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button onclick="submitManualAddress()" class="btn" style="background: #34bfb7; color: white; padding: 0.75rem 1.5rem; font-size: 1rem; margin-right: 0.5rem;">
+                            ✅ Use This Address
+                        </button>
+                        <button onclick="closeAddressSuggestions()" class="btn" style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; font-size: 1rem;">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Focus the input field
+            setTimeout(() => {
+                document.getElementById('manualAddressInput').focus();
+            }, 100);
+        }
+        
+        async function submitManualAddress() {
+            const manualAddress = document.getElementById('manualAddressInput').value.trim();
+            
+            if (!manualAddress) {
+                alert('Please enter an address');
+                return;
+            }
+            
+            // Basic validation for Florida address
+            if (!manualAddress.toLowerCase().includes('fl') && !manualAddress.toLowerCase().includes('florida')) {
+                alert('Please include FL or Florida in the address');
+                return;
+            }
+            
+            if (!/\d{5}/.test(manualAddress)) {
+                alert('Please include a 5-digit ZIP code');
+                return;
+            }
+            
+            try {
+                // Try to geocode the manual address to get coordinates
+                showMessage('🔍 Verifying manual address...', 'success');
+                
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(manualAddress)}&limit=1&countrycodes=us&addressdetails=1`);
+                const results = await response.json();
+                
+                let lat = null;
+                let lon = null;
+                
+                if (results && results.length > 0) {
+                    const result = results[0];
+                    lat = parseFloat(result.lat);
+                    lon = parseFloat(result.lon);
+                    
+                    // Verify it's in Florida
+                    if (lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5) {
+                        console.log('Manual address geocoded successfully:', lat, lon);
+                    } else {
+                        console.log('Manual address outside Florida bounds, using anyway');
+                    }
+                } else {
+                    // No coordinates found, but allow manual entry anyway
+                    console.log('Could not geocode manual address, using without coordinates');
+                    showMessage('⚠️ Could not verify coordinates, but address accepted. You may need to set up geofencing manually.', 'success');
+                }
+                
+                console.log('Manual address processing complete, calling selectRealtimeAddress');
+                
+                // Use the address with coordinates if found
+                if (lat && lon) {
+                    selectRealtimeAddress(manualAddress, lat, lon);
+                    console.log('Manual address with coordinates processed');
+                } else {
+                    // No coordinates but still allow the address
+                    selectRealtimeAddress(manualAddress, 0, 0);
+                    console.log('Manual address without coordinates processed');
+                }
+                
+                // Show success message after address is set
+                setTimeout(() => {
+                    if (lat && lon) {
+                        showMessage('✅ Manual address verified with GPS coordinates! Ready to save.', 'success');
+                    } else {
+                        showMessage('✅ Manual address accepted! Ready to save. (No GPS coordinates found - geofencing may need manual setup)', 'success');
+                    }
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error geocoding manual address:', error);
+                // Still allow the address even if geocoding fails
+                selectRealtimeAddress(manualAddress, 0, 0);
+                showMessage('✅ Manual address accepted and ready to save! (Could not verify coordinates - geofencing may need manual setup)', 'success');
+            }
+        }
+        
+        async function provideRealTimeSuggestions(partialAddress, clientName) {
+            console.log('provideRealTimeSuggestions called with:', {
+                partialAddress: partialAddress,
+                clientName: clientName
+            });
+            
+            // Don't search if user is still typing rapidly or address is too short
+            if (partialAddress.length < 3) {
+                console.log('Address too short, returning');
+                return;
+            }
+            
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            console.log('Suggestions div found:', suggestionsDiv);
+            
+            try {
+                // Show loading indicator
+                console.log('Showing loading indicator');
+                suggestionsDiv.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: #34bfb7;">
+                        <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">⏳ Searching...</div>
+                        <div style="font-size: 0.9rem; color: #666;">Finding ${clientName ? clientName + ' locations' : 'addresses'} in Florida...</div>
+                    </div>
+                `;
+                suggestionsDiv.style.display = 'block';
+                
+                console.log('Loading indicator set, proceeding to build search query');
+                
+                let searchQuery;
+                let isBusinessSearch = false;
+                
+                console.log('Variables initialized, checking client name:', clientName, 'length:', clientName?.length);
+                
+                if (clientName && clientName.length > 2) {
+                    // BACK TO SIMPLE WORKING SEARCH
+                    searchQuery = `${clientName} ${partialAddress.trim()} Florida`;
+                    isBusinessSearch = true;
+                } else {
+                    // Regular address search
+                    searchQuery = `${partialAddress}, Florida, USA`;
+                }
+                
+                console.log('=== SEARCH DEBUG ===');
+                console.log('Original input:', partialAddress);
+                console.log('Client name:', clientName);
+                console.log('Final search query:', searchQuery);
+                console.log('Is business search:', isBusinessSearch);
+                
+                const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=12&countrycodes=us&addressdetails=1`;
+                console.log('Full API URL:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                console.log('API Response status:', response.status, response.statusText);
+                
+                let results = await response.json();
+                console.log('API Results (first try - count:', results?.length || 0, '):', results);
+                
+                // If no results, try alternative searches
+                if ((!results || results.length === 0) && isBusinessSearch) {
+                    console.log('No results from first query, trying fallback searches...');
+                    
+                    // SIMPLE FALLBACK SEARCHES THAT WORK
+                    const fallbackQueries = [
+                        `${clientName} ${partialAddress.trim()}`,
+                        `${clientName} ${partialAddress.trim()} FL`,
+                        `${clientName} fort lauderdale florida`
+                    ];
+                    
+                    for (const fallbackQuery of fallbackQueries) {
+                        console.log('Trying fallback query:', fallbackQuery);
+                        const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fallbackQuery)}&limit=12&countrycodes=us&addressdetails=1`;
+                        const fallbackResponse = await fetch(fallbackUrl);
+                        const fallbackResults = await fallbackResponse.json();
+                        console.log('Fallback results:', fallbackResults);
+                        
+                        if (fallbackResults && fallbackResults.length > 0) {
+                            results = fallbackResults;
+                            console.log('Using fallback results:', results.length, 'found');
+                            break;
+                        }
+                    }
+                }
+                
+                console.log('Final results to process:', results?.length);
+                
+                if (results && results.length > 0) {
+                    // Filter for Florida results
+                    const floridaResults = results.filter(result => {
+                        const displayName = result.display_name.toLowerCase();
+                        const lat = parseFloat(result.lat);
+                        const lon = parseFloat(result.lon);
+                        
+                        console.log('Checking result:', {
+                            displayName: displayName,
+                            lat: lat,
+                            lon: lon,
+                            hasFloridaInName: displayName.includes('florida') || displayName.includes(', fl,'),
+                            isInFloridaBounds: lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5
+                        });
+                        
+                        return (displayName.includes('florida') || displayName.includes(', fl,')) &&
+                               lat >= 24.0 && lat <= 31.5 && lon >= -88.0 && lon <= -79.5;
+                    });
+                    
+                    console.log('Florida results count:', floridaResults.length);
+                    
+                    if (floridaResults.length > 0) {
+                        console.log('Calling displayRealTimeSuggestions with', floridaResults.length, 'results');
+                        displayRealTimeSuggestions(floridaResults, clientName, partialAddress, isBusinessSearch);
+                    } else {
+                        console.log('No Florida results, showing no results message');
+                        showNoResultsMessage(clientName, partialAddress);
+                    }
+                } else {
+                    console.log('No results from API, showing no results message');
+                    showNoResultsMessage(clientName, partialAddress);
+                }
+                
+            } catch (error) {
+                console.error('Real-time suggestion error:', error);
+                suggestionsDiv.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: #dc2626;">
+                        <div style="font-size: 1rem;">❌ Search temporarily unavailable</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">Please try the "Test FL Address" button instead</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayRealTimeSuggestions(results, clientName, partialAddress, isBusinessSearch) {
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            const maxResults = isBusinessSearch ? 10 : 6;
+            
+            let html = `
+                <div style="margin-bottom: 0.75rem; padding: 0.5rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #34bfb7;">
+                    <div style="font-weight: bold; color: #34bfb7; font-size: 1rem; margin-bottom: 0.25rem;">
+                        ⚡ ${isBusinessSearch ? clientName + ' Locations' : 'Address Suggestions'}
+                    </div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        ${isBusinessSearch ? 
+                            `Found ${results.length} ${clientName} locations in Florida` :
+                            `Found ${results.length} matching addresses in Florida`
+                        }
+                    </div>
+                </div>
+            `;
+            
+            const uniqueAddresses = new Set();
+            const suggestions = [];
+            
+            results.forEach(result => {
+                const address = result.display_name;
+                if (!uniqueAddresses.has(address)) {
+                    uniqueAddresses.add(address);
+                    suggestions.push(result);
+                }
+            });
+            
+            suggestions.slice(0, maxResults).forEach((result, index) => {
+                console.log('Processing result:', result.display_name);
+                const parts = result.display_name.split(',');
+                
+                let streetAndNumber = '';
+                let city = '';
+                let zip = '';
+                
+                // Better parsing - look for actual street addresses vs just business names
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i].trim();
+                    
+                    // Skip "Florida", "FL", "United States"
+                    if (/^(florida|fl|united states|usa)$/i.test(part)) {
+                        continue;
+                    }
+                    
+                    // Check for ZIP code
+                    const zipMatch = part.match(/\b(\d{5}(-\d{4})?)\b/);
+                    if (zipMatch && !zip) {
+                        zip = zipMatch[1];
+                        continue;
+                    }
+                    
+                    // Look for street addresses (contains numbers and street keywords)
+                    if (/\d+/.test(part) && /\b(st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ct|court|ln|lane|way|pl|place|pkwy|parkway|hwy|highway|cir|circle)\b/i.test(part)) {
+                        if (!streetAndNumber) {
+                            streetAndNumber = part;
+                        }
+                        continue;
+                    }
+                    
+                    // If no street found yet and this looks like it might contain an address
+                    if (!streetAndNumber && !/^[a-zA-Z\s]+$/.test(part) && part.length > 5) {
+                        streetAndNumber = part;
+                        continue;
+                    }
+                    
+                    // Otherwise, it's probably a city/area name
+                    if (!city && !/\d/.test(part) && !zipMatch) {
+                        city = part;
+                    }
+                }
+                
+                // If we don't have a street address, use the full display name minus FL/Florida/USA
+                if (!streetAndNumber) {
+                    const filteredParts = parts.filter(part => {
+                        const cleaned = part.trim().toLowerCase();
+                        return !['florida', 'fl', 'united states', 'usa'].includes(cleaned);
+                    });
+                    if (filteredParts.length > 0) {
+                        streetAndNumber = filteredParts[0];
+                        if (filteredParts.length > 1 && !city) {
+                            city = filteredParts[1];
+                        }
+                    }
+                }
+                
+                const formattedAddress = `${streetAndNumber}${city ? ', ' + city : ''}, FL${zip ? ' ' + zip : ''}`;
+                const lat = parseFloat(result.lat);
+                const lon = parseFloat(result.lon);
+                
+                console.log('Formatted address:', formattedAddress);
+                
+                html += `
+                    <div class="realtime-suggestion" onclick="selectRealtimeAddress('${formattedAddress.replace(/'/g, "&apos;").replace(/"/g, "&quot;")}', ${lat}, ${lon})"
+                         style="
+                             padding: 1rem; 
+                             margin-bottom: 0.75rem; 
+                             border: 2px solid #e3f2fd; 
+                             border-radius: 8px; 
+                             cursor: pointer; 
+                             transition: all 0.2s ease;
+                             background: ${isBusinessSearch ? 'linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%)' : '#fafafa'};
+                             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                         "
+                         onmouseover="this.style.background='#e3f2fd'; this.style.borderColor='#34bfb7'; this.style.transform='scale(1.02)'"
+                         onmouseout="this.style.background='${isBusinessSearch ? 'linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%)' : '#fafafa'}'; this.style.borderColor='#e3f2fd'; this.style.transform='scale(1)'">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                ${isBusinessSearch ? 
+                                    `<div style="font-weight: bold; color: #34bfb7; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                                        🏢 ${clientName}${city ? ' - ' + city : ''}
+                                     </div>` : ''
+                                }
+                                <div style="font-weight: 600; color: #333; font-size: 1rem; margin-bottom: 0.3rem;">
+                                    📍 ${formattedAddress}
+                                </div>
+                                <div style="font-size: 0.85rem; color: #555; line-height: 1.3; margin-bottom: 0.3rem;">
+                                    💼 Full Details: ${result.display_name.replace(/,\s*United States$/, '').replace(/,\s*Florida$/, ', FL')}
+                                </div>
+                                <div style="font-size: 0.8rem; color: #666;">
+                                    🌍 GPS: ${lat.toFixed(4)}, ${lon.toFixed(4)}
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #34bfb7; font-weight: bold; padding-left: 0.5rem;">
+                                Click to Select
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div style="text-align: center; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 2px solid #34bfb7;">
+                    <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #34bfb7;">
+                        <div style="font-weight: bold; color: #34bfb7; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            🎯 Don't see your exact location?
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; margin-bottom: 0.75rem;">
+                            If you know the exact address, you can enter it manually:
+                        </div>
+                        <button onclick="enableManualEntry()" class="btn" style="background: #34bfb7; color: white; padding: 0.5rem 1rem; font-size: 0.85rem; margin-right: 0.5rem;">
+                            ✍️ Enter Address Manually
+                        </button>
+                        <button onclick="closeAddressSuggestions()" class="btn" style="background: #6c757d; color: white; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            ✕ Close Suggestions
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            suggestionsDiv.innerHTML = html;
+            
+            // Prevent suggestions from disappearing when clicking inside the suggestions area
+            suggestionsDiv.addEventListener('mousedown', function(e) {
+                e.preventDefault(); // Prevent losing focus from address input
+            });
+            
+            suggestionsDiv.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event bubbling
+            });
+        }
+        
+        function showNoResultsMessage(clientName, partialAddress) {
+            const suggestionsDiv = document.getElementById('addressSuggestions');
+            const searchType = clientName ? `${clientName} locations` : 'addresses';
+            
+            suggestionsDiv.innerHTML = `
+                <div style="padding: 1rem; text-align: center; color: #666; background: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                    <div style="font-size: 1rem; margin-bottom: 0.5rem;">🔍 No ${searchType} found</div>
+                    <div style="font-size: 0.85rem; margin-bottom: 1rem;">Try a different city, street name, or be more specific</div>
+                    <button onclick="closeAddressSuggestions()" class="btn" style="background: #34bfb7; color: white; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        ✕ Close
+                    </button>
+                </div>
+            `;
+        }
+        
+        function selectRealtimeAddress(fullAddress, lat, lon) {
+            console.log('Selecting address:', fullAddress, 'Coordinates:', lat, lon);
+            
+            // Fill the address field
+            const addressField = document.getElementById('clientAddress');
+            addressField.value = fullAddress;
+            
+            // Store coordinates for later use (even if 0,0 for manual entry)
+            window.verifiedCoordinates = {
+                lat: parseFloat(lat) || 0,
+                lng: parseFloat(lon) || 0
+            };
+            
+            // Mark as verified since this was selected/entered by user
+            window.addressVerified = true;
+            window.lastVerifiedAddress = fullAddress;
+            
+            console.log('Address verification completed for manual/selected address');
+            
+            console.log('Verification set:', {
+                addressVerified: window.addressVerified,
+                lastVerifiedAddress: window.lastVerifiedAddress,
+                coordinates: window.verifiedCoordinates
+            });
+            
+            // Show verification icon
+            document.getElementById('verificationStatus').style.display = 'block';
+            
+            // Close suggestions
+            closeAddressSuggestions();
+            
+            // Show success message
+            showMessage('✨ Address selected and automatically verified! Ready to save client.', 'success');
+        }
+        
+        async function editClient(clientId) {
+            // Find the client data
+            try {
+                const response = await fetch('/api/clients');
+                const data = await response.json();
+                const clients = data.clients || data || [];
+                const client = clients.find(c => c.id === clientId);
+                
+                if (!client) {
+                    showMessage('❌ Client not found', 'error');
+                    return;
+                }
+                
+                // Pre-fill form with current data
+                document.getElementById('clientName').value = client.name;
+                document.getElementById('clientAddress').value = client.address;
+                
+                // Change form to edit mode
+                const form = document.getElementById('clientForm');
+                form.setAttribute('data-edit-id', clientId);
+                
+                // Update form header and button
+                document.querySelector('.form-header').innerHTML = '✏️ Edit Client';
+                document.querySelector('button[type="submit"]').innerHTML = '💾 Update Client';
+                
+                // Add cancel button
+                const buttonContainer = document.querySelector('div[style*="justify-content: center"]');
+                if (!document.getElementById('cancelEdit')) {
+                    buttonContainer.innerHTML += '<button type="button" id="cancelEdit" onclick="cancelEdit()" class="btn" style="background: #6c757d; color: white;">❌ Cancel</button>';
+                }
+                
+                // Scroll to form
+                document.querySelector('.client-form-section').scrollIntoView({ behavior: 'smooth' });
+                
+                showMessage(`✏️ Now editing: ${client.name}`, 'success');
+                
+            } catch (error) {
+                console.error('Error loading client for edit:', error);
+                showMessage('❌ Error loading client data', 'error');
+            }
+        }
+        
+        function cancelEdit() {
+            // Reset form
+            document.getElementById('clientForm').reset();
+            document.getElementById('clientForm').removeAttribute('data-edit-id');
+            
+            // Reset form header and button
+            document.querySelector('.form-header').innerHTML = '➥ Add New Client';
+            document.querySelector('button[type="submit"]').innerHTML = '💾 Save Client';
+            
+            // Reset verification status
+            window.addressVerified = false;
+            window.lastVerifiedAddress = null;
+            window.verifiedCoordinates = null;
+            document.getElementById('verificationStatus').style.display = 'none';
+            
+            // Remove cancel button
+            const cancelBtn = document.getElementById('cancelEdit');
+            if (cancelBtn) {
+                cancelBtn.remove();
+            }
+            
+            showMessage('✅ Edit cancelled', 'success');
+        }
+
+        function createGeofence(clientId) {
+            // Redirect to geofence setup with pre-selected client
+            window.location.href = `/admin/geofence-setup?client_id=${clientId}`;
+        }
+
+        function viewGeofences(clientId) {
+            alert(`👁️ View Geofences\n\nThis will show all geofences for Client ID: ${clientId}\n\nFeature coming in next update!`);
+        }
+        
+        async function deleteClient(clientId, clientName) {
+            // Confirm deletion
+            const confirmed = confirm(`🗑️ Delete Client\n\nAre you sure you want to delete "${clientName}"?\n\nThis action cannot be undone.\n\nNote: Clients with existing geofences or employees cannot be deleted.`);
+            
+            if (!confirmed) {
+                return;
+            }
+            
+            try {
+                showMessage('🔄 Deleting client...', 'success');
+                
+                const response = await fetch(`/api/clients?id=${clientId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('✅ Client deleted successfully!', 'success');
+                    loadClients();
+                } else {
+                    showMessage('❌ Cannot delete client: ' + (result.error || 'Unknown error'), 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error deleting client:', error);
+                showMessage('❌ Error deleting client. Please try again.', 'error');
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('formMessage');
+            messageDiv.innerHTML = message;
+            messageDiv.className = `alert alert-${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
